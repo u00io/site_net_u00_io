@@ -111,10 +111,8 @@
 
 <h1>Generate Random MAC Address</h1>
 <p>
-    This tool <strong>generates a random MAC (Media Access Control) address</strong> that can be used for network
-    testing and
-    configuration purposes. A MAC address is a unique identifier assigned to network interfaces for communications on
-    the physical network segment.
+    This tool generates valid MAC addresses with explicit control over unicast/multicast and locally administered bits.
+    Suitable for testing, virtualization, and documentation.
 </p>
 
 <h2>Generated MAC Address</h2>
@@ -158,7 +156,7 @@
             macAddress += getRandomHexDigit();
         }
         
-        // Apply multicast and locally administered bits to the first octet
+        // Apply locally administered bit to the first octet
         // Ensure we have at least 2 characters for the first octet
         var firstOctetHex = macAddress.substr(0, 2);
         if (firstOctetHex.length === 1) {
@@ -166,13 +164,8 @@
         }
         var firstOctet = parseInt(firstOctetHex, 16);
         
-        // Bit 0 (LSB) of first octet: 1 = multicast, 0 = unicast
-        var isMulticast = document.getElementById('multicast_checkbox').checked;
-        if (isMulticast) {
-            firstOctet |= 0x01; // Set bit 0
-        } else {
-            firstOctet &= 0xFE; // Clear bit 0
-        }
+        // Bit 0 (LSB) of first octet: always 0 for unicast
+        firstOctet &= 0xFE; // Clear bit 0 to ensure unicast
         
         // Bit 1 of first octet: 1 = locally administered, 0 = universally administered
         var isLocallyAdministered = document.getElementById('locally_administered_checkbox').checked;
@@ -226,12 +219,8 @@
         }
         var firstOctet = parseInt(firstOctetHex, 16);
         
-        var isMulticast = document.getElementById('multicast_checkbox').checked;
-        if (isMulticast) {
-            firstOctet |= 0x01;
-        } else {
-            firstOctet &= 0xFE;
-        }
+        // Always ensure unicast (bit 0 = 0)
+        firstOctet &= 0xFE;
         
         var isLocallyAdministered = document.getElementById('locally_administered_checkbox').checked;
         if (isLocallyAdministered) {
@@ -345,13 +334,12 @@
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
+        <div style="font-size: 12px; color: #666; text-align: center; max-width: 300px; line-height: 1.3;">
+            First byte will be normalized according to selected bit options.
+        </div>
     </div>
     
     <div class="checkbox-container">
-        <div class="checkbox-row">
-            <input type="checkbox" id="multicast_checkbox" onchange="generateMacAddress()" />
-            <label for="multicast_checkbox" class="input-label">Multicast (bit 0)</label>
-        </div>
         <div class="checkbox-row">
             <input type="checkbox" id="locally_administered_checkbox" checked onchange="generateMacAddress()" />
             <label for="locally_administered_checkbox" class="input-label">Locally Administered (bit 1)</label>
