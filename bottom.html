@@ -1,0 +1,51 @@
+</div>
+</section>
+</main>
+<section class="bottom">
+<div class="wrapper">
+    <div class="dark_block" style="background-color: #181818;">
+        <div class="bottom_columns">
+            <ul class="bottom_list">
+                <li class="bottom_item">
+                    <a class="bottom_link" href="/nui/">NUI</a>
+                </li>
+            </ul>
+        </div>
+        <div style="font-size: 8pt; text-align: center; color: #777777;">
+            Copyright © 2020-2025 Poluianov Ivan
+        </div>
+    </div>
+</div>
+</section>
+
+<div id="cookie_notification">
+<div>
+    This site uses cookies to offer you a better browsing experience.
+</div>
+<div>
+    <button class="button cookie_accept">Accept</button>
+</div>
+</div>
+
+<script>
+function checkCookies(){
+let cookieDate = localStorage.getItem('cookieDate');
+let cookieNotification = document.getElementById('cookie_notification');
+let cookieBtn = cookieNotification.querySelector('.cookie_accept');
+if( !cookieDate || (+cookieDate + 31536000000) < Date.now() ){
+    cookieNotification.classList.add('show');
+}
+cookieBtn.addEventListener('click', function(){
+    localStorage.setItem( 'cookieDate', Date.now() );
+    cookieNotification.classList.remove('show');
+})
+}
+checkCookies();
+</script>
+
+<script src="js/animation.js">
+</script>
+
+</body>
+</html>
+
