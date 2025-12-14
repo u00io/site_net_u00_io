@@ -328,10 +328,9 @@
             initializeClearButton('clear_netmask_button', 'netmask_input', 'netmask_message', clearNetmaskInput);
         }
         
-        // Set some example values on load
-        const examples = ['255.255.255.0', '255.255.0.0', '255.255.255.128'];
-        const randomExample = examples[Math.floor(Math.random() * examples.length)];
-        document.getElementById('netmask_input').placeholder = randomExample;
+        // Set default value and convert automatically
+        document.getElementById('netmask_input').value = '255.255.255.0';
+        convertNetmask();
     });
 </script>
 
