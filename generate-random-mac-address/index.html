@@ -108,8 +108,10 @@
         var prefixInput = document.getElementById('prefix').value;
         var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
         console.log('Parsed prefix:', prefix);
-        if (prefix.length % 2 !== 0 || prefix.length > 10) {
-            document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5 bytes).';
+        
+        // Allow prefix up to 11 hex digits (5.5 bytes)
+        if (prefix.length > 11) {
+            document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5.5 bytes, 11 hex digits).';
             return null;
         }
         return prefix;
@@ -128,7 +130,12 @@
         }
         
         // Apply multicast and locally administered bits to the first octet
-        var firstOctet = parseInt(macAddress.substr(0, 2), 16);
+        // Ensure we have at least 2 characters for the first octet
+        var firstOctetHex = macAddress.substr(0, 2);
+        if (firstOctetHex.length === 1) {
+            firstOctetHex = firstOctetHex + '0';
+        }
+        var firstOctet = parseInt(firstOctetHex, 16);
         
         // Bit 0 (LSB) of first octet: 1 = multicast, 0 = unicast
         var isMulticast = document.getElementById('multicast_checkbox').checked;
@@ -147,7 +154,8 @@
         }
         
         // Replace first octet in MAC address
-        macAddress = firstOctet.toString(16).toUpperCase().padStart(2, '0') + macAddress.substr(2);
+        var newFirstOctet = firstOctet.toString(16).toUpperCase().padStart(2, '0');
+        macAddress = newFirstOctet + macAddress.substr(2);
         
         // Format the MAC address as XX:XX:XX:XX:XX:XX
         var formattedMac = '';
