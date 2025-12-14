@@ -153,6 +153,12 @@
         prefixMessage.textContent = 'First byte will be normalized according to selected bit options.';
         prefixMessage.style.color = '#666';
         prefixInput.style.borderColor = '#ccc';
+        
+        // Automatically generate new MAC address if input is valid
+        setTimeout(function() {
+            generateMacAddress();
+        }, 100);
+        
         return true;
     }
     
@@ -362,7 +368,7 @@
         <label for="prefix" class="input-label">Prefix</label>
         <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
             <input type="text" id="prefix" class="input-field" placeholder="e.g. 02:AB:CD or 02ABCD" 
-                   oninput="validatePrefixInput()" onblur="generateMacAddress()" />
+                   oninput="validatePrefixInput()" />
             <button class="btn-clear" onclick="clearPrefixInput()">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
