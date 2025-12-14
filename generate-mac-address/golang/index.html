@@ -1,0 +1,199 @@
+{#header.html#}
+
+{%title=Generate MAC Address — u00 Network Tools%}
+{%description=Generate valid MAC addresses for testing, virtualization, and documentation. Control unicast/multicast and locally administered bits.%}
+
+<style>
+    .code-container {
+        position: relative;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e1e5e9;
+    }
+    
+    .code-container pre {
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 0;
+        overflow-x: auto;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .code-container code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        font-family: inherit;
+    }
+    
+    .code-header {
+        background: linear-gradient(90deg, #00ADD8 0%, #007D9C 100%);
+        color: white;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        border-bottom: 1px solid #e1e5e9;
+    }
+</style>
+
+<h1>Generate MAC addresses using Go</h1>
+
+<p>
+Below is a simple Go example that generates MAC addresses with support for
+a custom prefix, control over the locally administered bit, and a configurable
+number of generated addresses.
+</p>
+
+<p>
+The first byte is automatically normalized to ensure correct unicast behavior
+and optional local administration.
+</p>
+
+<div class="code-container">
+    <div class="code-header">
+        <span>Go Code</span>
+    </div>
+    <pre><code class="language-go" id="golang_code">package main
+
+import (
+	"fmt"
+	"math/rand"
+	"strconv"
+	"strings"
+	"time"
+)
+
+// normalizeFirstByte ensures the first byte has correct unicast and U/L bits
+func normalizeFirstByte(b byte, locallyAdministered bool) byte {
+	// Clear I/G bit (bit 0) → unicast
+	b &= 0b11111110
+
+	// Set or clear U/L bit (bit 1)
+	if locallyAdministered {
+		b |= 0b00000010
+	} else {
+		b &= 0b11111101
+	}
+
+	return b
+}
+
+// generateMACAddresses generates MAC addresses with the given parameters
+func generateMACAddresses(prefix string, locallyAdministered bool, count int) ([]string, error) {
+	// Initialize random seed
+	rand.Seed(time.Now().UnixNano())
+
+	// Normalize prefix - remove non-hex characters and convert to uppercase
+	hexPrefix := ""
+	for _, c := range strings.ToUpper(prefix) {
+		if (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') {
+			hexPrefix += string(c)
+		}
+	}
+
+	// Validate prefix length (max 5 bytes = 10 hex characters)
+	if len(hexPrefix)%2 != 0 || len(hexPrefix) > 10 {
+		return nil, fmt.Errorf("prefix must contain 0-5 bytes (0-10 hex characters)")
+	}
+
+	// Parse prefix bytes
+	var prefixBytes []byte
+	for i := 0; i < len(hexPrefix); i += 2 {
+		b, err := strconv.ParseUint(hexPrefix[i:i+2], 16, 8)
+		if err != nil {
+			return nil, fmt.Errorf("invalid hex in prefix: %v", err)
+		}
+		prefixBytes = append(prefixBytes, byte(b))
+	}
+
+	var macs []string
+
+	for i := 0; i < count; i++ {
+		// Start with prefix bytes
+		bytes := make([]byte, len(prefixBytes))
+		copy(bytes, prefixBytes)
+
+		// Generate remaining random bytes
+		for len(bytes) < 6 {
+			bytes = append(bytes, byte(rand.Intn(256)))
+		}
+
+		// Normalize first byte
+		bytes[0] = normalizeFirstByte(bytes[0], locallyAdministered)
+
+		// Format as MAC address
+		var parts []string
+		for _, b := range bytes {
+			parts = append(parts, fmt.Sprintf("%02X", b))
+		}
+		mac := strings.Join(parts, ":")
+		macs = append(macs, mac)
+	}
+
+	return macs, nil
+}
+
+func main() {
+	// Example usage
+	macs, err := generateMACAddresses(
+		"02:AB",           // prefix
+		true,              // locally administered
+		3,                 // count
+	)
+
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
+	}
+
+	for _, mac := range macs {
+		fmt.Println(mac)
+	}
+}
+</code></pre>
+    <button id="copy_golang_button" class="btn-copy" onclick="copyGolangCode()" style="position: absolute; top: 12px; right: 20px; z-index: 10;">
+        <!-- SVG will be inserted by JavaScript -->
+    </button>
+</div>
+
+<script>
+function copyGolangCode() {
+    var codeElement = document.getElementById('golang_code');
+    var codeText = codeElement.textContent;
+    var copyButton = document.getElementById('copy_golang_button');
+    
+    if (codeText) {
+        navigator.clipboard.writeText(codeText).then(function() {
+            // Change icon to green checkmark
+            copyButton.innerHTML = SVG_ICONS.check;
+            copyButton.style.backgroundColor = '#4CAF50';
+            
+            // Restore original icon after 3 seconds
+            setTimeout(function() {
+                copyButton.innerHTML = SVG_ICONS.copy;
+                copyButton.style.backgroundColor = '#6c757d';
+            }, 3000);
+        }, function(err) {
+            console.error('Failed to copy code: ', err);
+            alert('Failed to copy code to clipboard');
+        });
+    } else {
+        alert('No code to copy.');
+    }
+}
+
+// Initialize copy button icon when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    var copyButton = document.getElementById('copy_golang_button');
+    if (copyButton && typeof SVG_ICONS !== 'undefined') {
+        copyButton.innerHTML = SVG_ICONS.copy;
+    }
+});
+</script>
+
+{#bottom.html#}
