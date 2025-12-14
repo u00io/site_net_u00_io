@@ -20,11 +20,11 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     .btn-copy:hover {
         background-color: #5a6268;
     }
-    
+
     .btn-clear {
         width: 40px;
         height: 40px;
@@ -40,11 +40,11 @@
         justify-content: center;
         margin-left: 8px;
     }
-    
+
     .btn-clear:hover {
         background-color: #c82333;
     }
-    
+
     /* Common input styles */
     .input-field {
         font-family: 'Consolas', 'Courier New', Courier, monospace;
@@ -55,7 +55,7 @@
         border-radius: 4px;
         padding: 0 8px;
     }
-    
+
     .input-label {
         font-weight: bold;
         font-size: 14px;
@@ -63,7 +63,7 @@
 </style>
 
 <script>
-    
+
 </script>
 
 <h1>Generate Random MAC Address</h1>
@@ -78,11 +78,11 @@
     // Page-specific functions for MAC address generation
     var error = '';
     var macAddress = '';
-    
+
     function getRandomHexDigit() {
         return Math.floor(Math.random() * 16).toString(16).toUpperCase();
     }
-    
+
     function parsePrefix() {
         var prefixInput = document.getElementById('prefix').value;
         var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
@@ -116,7 +116,6 @@
         document.getElementById('error_message').textContent = '';
     }
 
-    generateMacAddress();
 </script>
 
 <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 12px;">
@@ -138,5 +137,9 @@
     </div>
     <div id="error_message" style="color: red; font-weight: bold; min-height: 24px;"></div>
 </div>
+
+<script>
+    generateMacAddress();
+</script>
 
 {#bottom.html#}
