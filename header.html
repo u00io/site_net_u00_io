@@ -115,6 +115,51 @@
         button:hover {
             background-color: #0288D1;
         }
+        
+        /* Common button styles for reuse across pages */
+        .btn-copy {
+            font-size: 16px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background-color: #6c757d;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-copy:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-copy:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-clear {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background-color: #6c757d;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+        
+        .btn-clear:hover {
+            background-color: #5a6268;
+        }
 
         button.big {
             font-size: 24px;
@@ -140,7 +185,7 @@
         };
 
 
-        // Common utility function for copying to clipboard with visual feedback
+        // Enhanced utility function for copying to clipboard with visual feedback and animation
         function copyInputValueToClipboard(btnId, inputId) {
             var inputField = document.getElementById(inputId);
             var inputValue = inputField.value;
@@ -148,9 +193,15 @@
 
             if (inputValue) {
                 navigator.clipboard.writeText(inputValue).then(function () {
-                    // Change icon to green checkmark
-                    copyButton.innerHTML = SVG_ICONS.check;
-                    copyButton.style.backgroundColor = '#4CAF50';
+                    // Add click animation
+                    copyButton.style.transform = 'scale(0.95)';
+                    
+                    // Change icon to green checkmark with animation
+                    setTimeout(function() {
+                        copyButton.innerHTML = SVG_ICONS.check;
+                        copyButton.style.backgroundColor = '#4CAF50';
+                        copyButton.style.transform = 'scale(1)';
+                    }, 100);
 
                     // Restore original icon after 3 seconds
                     setTimeout(function () {
@@ -159,8 +210,46 @@
                     }, 3000);
                 }, function (err) {
                     console.error('Failed to copy to clipboard: ', err);
+                    alert('Failed to copy to clipboard');
                 });
+            } else {
+                alert('No content to copy.');
             }
+        }
+        
+        // Universal function to initialize copy buttons
+        function initializeCopyButton(buttonId, inputId) {
+            var button = document.getElementById(buttonId);
+            if (button && typeof SVG_ICONS !== 'undefined') {
+                button.innerHTML = SVG_ICONS.copy;
+                button.onclick = function() {
+                    copyInputValueToClipboard(buttonId, inputId);
+                };
+            }
+        }
+        
+        // Universal function to initialize all copy buttons on the page
+        function initializeAllCopyButtons() {
+            // Find all buttons with class 'btn-copy' and set up copy functionality
+            var copyButtons = document.querySelectorAll('.btn-copy');
+            copyButtons.forEach(function(button) {
+                if (typeof SVG_ICONS !== 'undefined') {
+                    button.innerHTML = SVG_ICONS.copy;
+                }
+                
+                // If button has onclick with copyInputValueToClipboard, it's already set up
+                if (button.onclick && button.onclick.toString().includes('copyInputValueToClipboard')) {
+                    return;
+                }
+                
+                // Auto-detect input field based on button's position or data attributes
+                var inputId = button.getAttribute('data-input-id');
+                if (inputId) {
+                    button.onclick = function() {
+                        copyInputValueToClipboard(button.id, inputId);
+                    };
+                }
+            });
         }
         // Common utility function for clearing input fields
         function clearInput(inputId, errorId) {
@@ -171,9 +260,16 @@
         }
         // Initialize page when loaded
         document.addEventListener('DOMContentLoaded', function () {
-            // Set initial SVG icons
-            document.getElementById('copy_button').innerHTML = SVG_ICONS.copy;
-            document.querySelector('.btn-clear').innerHTML = SVG_ICONS.clear;
+            // Initialize all copy buttons
+            initializeAllCopyButtons();
+            
+            // Set clear button icons
+            var clearButtons = document.querySelectorAll('.btn-clear');
+            clearButtons.forEach(function(btn) {
+                if (typeof SVG_ICONS !== 'undefined') {
+                    btn.innerHTML = SVG_ICONS.clear;
+                }
+            });
         });
 
     </script>

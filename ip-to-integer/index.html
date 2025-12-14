@@ -263,24 +263,7 @@
 </div>
 
 <script>
-    // Initialize SVG icons when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set clear button icon
-        var clearButtons = document.querySelectorAll('.btn-clear');
-        clearButtons.forEach(function(btn) {
-            if (typeof SVG_ICONS !== 'undefined') {
-                btn.innerHTML = SVG_ICONS.clear;
-            }
-        });
-        
-        // Set copy button icons
-        var copyButtons = document.querySelectorAll('.btn-copy');
-        copyButtons.forEach(function(btn) {
-            if (typeof SVG_ICONS !== 'undefined') {
-                btn.innerHTML = SVG_ICONS.copy;
-            }
-        });
-    });
+    // The page initialization is now handled by header.html automatically
 </script>
 
 {#bottom.html#}
