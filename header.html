@@ -278,18 +278,58 @@
                 document.getElementById(errorId).textContent = '';
             }
         }
+
+        // Initialize a specific clear button with icon and click handler
+        function initializeClearButton(buttonId, inputId, errorId, customHandler) {
+            var button = document.getElementById(buttonId);
+            if (button) {
+                // Set icon
+                if (typeof SVG_ICONS !== 'undefined') {
+                    button.innerHTML = SVG_ICONS.clear;
+                }
+                
+                // Set click handler
+                button.onclick = function() {
+                    if (customHandler && typeof customHandler === 'function') {
+                        customHandler();
+                    } else {
+                        clearInput(inputId, errorId);
+                    }
+                };
+            }
+        }
+
+        // Universal function to initialize all clear buttons on the page
+        function initializeAllClearButtons() {
+            var clearButtons = document.querySelectorAll('.btn-clear');
+            clearButtons.forEach(function(button) {
+                if (typeof SVG_ICONS !== 'undefined') {
+                    button.innerHTML = SVG_ICONS.clear;
+                }
+                
+                // If button already has onclick, it's already set up
+                if (button.onclick) {
+                    return;
+                }
+                
+                // Auto-detect input field based on data attributes
+                var inputId = button.getAttribute('data-input-id');
+                var errorId = button.getAttribute('data-error-id');
+                
+                if (inputId) {
+                    button.onclick = function() {
+                        clearInput(inputId, errorId);
+                    };
+                }
+            });
+        }
         // Initialize page when loaded
         document.addEventListener('DOMContentLoaded', function () {
             // Initialize all copy buttons
             initializeAllCopyButtons();
             
-            // Set clear button icons
-            var clearButtons = document.querySelectorAll('.btn-clear');
-            clearButtons.forEach(function(btn) {
-                if (typeof SVG_ICONS !== 'undefined') {
-                    btn.innerHTML = SVG_ICONS.clear;
-                }
-            });
+            // Initialize all clear buttons
+            initializeAllClearButtons();
         });
 
     </script>

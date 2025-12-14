@@ -337,7 +337,7 @@
         <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
             <input type="text" id="prefix" class="input-field" placeholder="e.g. 02:AB:CD or 02ABCD"
                 oninput="validatePrefixInput()" />
-            <button id="clear_prefix_button" class="btn-clear" onclick="clearPrefixInput()">
+            <button id="clear_prefix_button" class="btn-clear">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
@@ -370,16 +370,14 @@
 <script>
     generateMacAddress();
     
-    // Initialize copy button using header.html functions
+    // Initialize copy and clear buttons using header.html functions
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof initializeCopyButton === 'function') {
             initializeCopyButton('copy_button', 'mac_address');
         }
         
-        // Initialize clear button manually
-        var clearButton = document.getElementById('clear_prefix_button');
-        if (clearButton && typeof SVG_ICONS !== 'undefined') {
-            clearButton.innerHTML = SVG_ICONS.clear;
+        if (typeof initializeClearButton === 'function') {
+            initializeClearButton('clear_prefix_button', 'prefix', 'prefix_message', clearPrefixInput);
         }
     });
 </script>
