@@ -263,6 +263,20 @@
         generatedAddresses = [];
         var addressSet = new Set();
         
+        // Check if we have enough random space for 100 unique addresses
+        var prefix = parsePrefix();
+        if (prefix === null) {
+            return;
+        }
+        
+        var randomDigits = 12 - prefix.length;
+        var maxPossibleAddresses = Math.pow(16, randomDigits);
+        var targetCount = Math.min(100, maxPossibleAddresses);
+        
+        if (maxPossibleAddresses < 100) {
+            console.warn('With prefix length', prefix.length, 'can only generate', maxPossibleAddresses, 'unique addresses');
+        }
+        
         // Add the main generated address
         var mainAddress = document.getElementById('mac_address').value;
         if (mainAddress) {
@@ -270,16 +284,27 @@
             generatedAddresses.push(mainAddress);
         }
         
-        // Generate 99 more unique addresses
-        while (generatedAddresses.length < 100) {
+        // Generate additional unique addresses with safety limit
+        var attempts = 0;
+        var maxAttempts = targetCount * 10; // Safety limit to prevent infinite loops
+        
+        while (generatedAddresses.length < targetCount && attempts < maxAttempts) {
             var newAddress = generateSingleMacAddress();
+            attempts++;
+            
             if (newAddress && !addressSet.has(newAddress)) {
                 addressSet.add(newAddress);
                 generatedAddresses.push(newAddress);
             }
         }
         
-        console.log('Generated', generatedAddresses.length, 'unique MAC addresses');
+        console.log('Generated', generatedAddresses.length, 'unique MAC addresses out of', targetCount, 'target (', attempts, 'attempts)');
+        
+        // Update download button text
+        var downloadButton = document.getElementById('download_button');
+        if (downloadButton) {
+            downloadButton.textContent = 'Download ' + generatedAddresses.length + ' MAC Addresses (CSV)';
+        }
     }
     
     function downloadCSV() {
@@ -295,11 +320,17 @@
         if (link.download !== undefined) {
             var url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', 'mac_addresses.csv');
+            
+            // Dynamic filename with count
+            var filename = 'mac_addresses_' + generatedAddresses.length + '.csv';
+            link.setAttribute('download', filename);
+            
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            alert('Downloaded ' + generatedAddresses.length + ' MAC addresses to ' + filename);
         }
     }
 
@@ -338,8 +369,8 @@
         </button>
     </div>
     
-    <button onclick="downloadCSV()" class="btn-download">
-        Download 100 MAC Addresses (CSV)
+    <button id="download_button" onclick="downloadCSV()" class="btn-download">
+        Download MAC Addresses (CSV)
     </button>
     <div id="error_message" style="color: red; font-weight: bold; min-height: 24px;"></div>
 </div>
