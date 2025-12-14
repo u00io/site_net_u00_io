@@ -101,48 +101,38 @@
         return binary.match(/.{8}/g).join('.');
     }
     
-    function integerToBigEndian(num) {
-        // Big-endian (network byte order) - most significant byte first
-        var bytes = [
-            (num >>> 24) & 0xFF,
-            (num >>> 16) & 0xFF,
-            (num >>> 8) & 0xFF,
-            num & 0xFF
-        ];
-        return '0x' + bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join('');
+    function decimalToBigEndian(num) {
+        // Big-endian decimal representation
+        return (num >>> 0).toString();
     }
     
-    function integerToLittleEndian(num) {
-        // Little-endian (x86 byte order) - least significant byte first
+    function decimalToLittleEndian(num) {
+        // Little-endian decimal - swap byte order
         var bytes = [
             num & 0xFF,
             (num >>> 8) & 0xFF,
             (num >>> 16) & 0xFF,
             (num >>> 24) & 0xFF
         ];
-        return '0x' + bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join('');
+        var swapped = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+        return (swapped >>> 0).toString();
     }
     
-    function integerToDecimalBigEndian(num) {
-        // Big-endian decimal - most significant byte first
-        var bytes = [
-            (num >>> 24) & 0xFF,
-            (num >>> 16) & 0xFF,
-            (num >>> 8) & 0xFF,
-            num & 0xFF
-        ];
-        return bytes.join('.');
+    function hexToBigEndian(num) {
+        // Big-endian hex representation
+        return '0x' + (num >>> 0).toString(16).toUpperCase().padStart(8, '0');
     }
     
-    function integerToDecimalLittleEndian(num) {
-        // Little-endian decimal - least significant byte first  
+    function hexToLittleEndian(num) {
+        // Little-endian hex - swap byte order
         var bytes = [
             num & 0xFF,
             (num >>> 8) & 0xFF,
             (num >>> 16) & 0xFF,
             (num >>> 24) & 0xFF
         ];
-        return bytes.join('.');
+        var swapped = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+        return '0x' + (swapped >>> 0).toString(16).toUpperCase().padStart(8, '0');
     }
     
     function convertIP() {
@@ -170,34 +160,29 @@
         
         // Convert to different formats
         var integer = ipToInteger(validation.octets);
-        var hex = integerToHex(integer);
+        var decimalBE = decimalToBigEndian(integer);
+        var decimalLE = decimalToLittleEndian(integer);
+        var hexBE = hexToBigEndian(integer);
+        var hexLE = hexToLittleEndian(integer);
         var binary = integerToBinary(integer);
         var formattedBinary = formatBinary(binary);
-        var bigEndian = integerToBigEndian(integer);
-        var littleEndian = integerToLittleEndian(integer);
-        var decimalBigEndian = integerToDecimalBigEndian(integer);
-        var decimalLittleEndian = integerToDecimalLittleEndian(integer);
         
         // Display results
-        document.getElementById('decimal_result').value = integer.toString();
-        document.getElementById('hex_result').value = hex;
+        document.getElementById('decimal_be_result').value = decimalBE;
+        document.getElementById('decimal_le_result').value = decimalLE;
+        document.getElementById('hex_be_result').value = hexBE;
+        document.getElementById('hex_le_result').value = hexLE;
         document.getElementById('binary_result').value = formattedBinary;
-        document.getElementById('big_endian_result').value = bigEndian;
-        document.getElementById('little_endian_result').value = littleEndian;
-        document.getElementById('decimal_big_endian_result').value = decimalBigEndian;
-        document.getElementById('decimal_little_endian_result').value = decimalLittleEndian;
         
         console.log('Converted IP:', ipInput, '→', integer);
     }
     
     function clearResults() {
-        document.getElementById('decimal_result').value = '';
-        document.getElementById('hex_result').value = '';
+        document.getElementById('decimal_be_result').value = '';
+        document.getElementById('decimal_le_result').value = '';
+        document.getElementById('hex_be_result').value = '';
+        document.getElementById('hex_le_result').value = '';
         document.getElementById('binary_result').value = '';
-        document.getElementById('big_endian_result').value = '';
-        document.getElementById('little_endian_result').value = '';
-        document.getElementById('decimal_big_endian_result').value = '';
-        document.getElementById('decimal_little_endian_result').value = '';
     }
     
     function clearIPInput() {
@@ -236,17 +221,33 @@
     
     <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px;">
         <div class="conversion-row">
-            <span class="format-label">Decimal:</span>
-            <input type="text" id="decimal_result" readonly class="result-display" />
-            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_copy', 'decimal_result')">
+            <span class="format-label">Decimal BE:</span>
+            <input type="text" id="decimal_be_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_be_copy', 'decimal_be_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
         
         <div class="conversion-row">
-            <span class="format-label">Hexadecimal:</span>
-            <input type="text" id="hex_result" readonly class="result-display" />
-            <button class="btn-copy" onclick="copyInputValueToClipboard('hex_copy', 'hex_result')">
+            <span class="format-label">Decimal LE:</span>
+            <input type="text" id="decimal_le_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_le_copy', 'decimal_le_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Hex BE:</span>
+            <input type="text" id="hex_be_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('hex_be_copy', 'hex_be_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Hex LE:</span>
+            <input type="text" id="hex_le_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('hex_le_copy', 'hex_le_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
@@ -255,38 +256,6 @@
             <span class="format-label">Binary:</span>
             <input type="text" id="binary_result" readonly class="result-display" />
             <button class="btn-copy" onclick="copyInputValueToClipboard('binary_copy', 'binary_result')">
-                <!-- SVG will be inserted by JavaScript -->
-            </button>
-        </div>
-        
-        <div class="conversion-row">
-            <span class="format-label">Big-endian:</span>
-            <input type="text" id="big_endian_result" readonly class="result-display" />
-            <button class="btn-copy" onclick="copyInputValueToClipboard('big_endian_copy', 'big_endian_result')">
-                <!-- SVG will be inserted by JavaScript -->
-            </button>
-        </div>
-        
-        <div class="conversion-row">
-            <span class="format-label">Little-endian:</span>
-            <input type="text" id="little_endian_result" readonly class="result-display" />
-            <button class="btn-copy" onclick="copyInputValueToClipboard('little_endian_copy', 'little_endian_result')">
-                <!-- SVG will be inserted by JavaScript -->
-            </button>
-        </div>
-        
-        <div class="conversion-row">
-            <span class="format-label">Dec Big-endian:</span>
-            <input type="text" id="decimal_big_endian_result" readonly class="result-display" />
-            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_big_endian_copy', 'decimal_big_endian_result')">
-                <!-- SVG will be inserted by JavaScript -->
-            </button>
-        </div>
-        
-        <div class="conversion-row">
-            <span class="format-label">Dec Little-endian:</span>
-            <input type="text" id="decimal_little_endian_result" readonly class="result-display" />
-            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_little_endian_copy', 'decimal_little_endian_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
