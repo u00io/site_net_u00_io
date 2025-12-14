@@ -1,7 +1,8 @@
 {#header.html#}
 
 {%title=Generate MAC Address — u00 Network Tools%}
-{%description=Generate valid MAC addresses for testing, virtualization, and documentation. Control unicast/multicast and locally administered bits.%}
+{%description=Generate valid MAC addresses for testing, virtualization, and documentation. Control unicast/multicast and
+locally administered bits.%}
 
 <style>
     /* Common button styles for reuse across pages */
@@ -40,10 +41,12 @@
         justify-content: center;
         margin-left: 8px;
     }
-    
+
     .btn-clear:hover {
         background-color: #5a6268;
-    }    /* Common input styles */
+    }
+
+    /* Common input styles */
     .input-field {
         font-family: 'Consolas', 'Courier New', Courier, monospace;
         font-size: 24px;
@@ -58,7 +61,7 @@
         font-weight: bold;
         font-size: 16px;
     }
-    
+
     /* Checkbox container styles */
     .checkbox-container {
         display: flex;
@@ -70,25 +73,25 @@
         border-radius: 4px;
         background-color: #f9f9f9;
     }
-    
+
     .checkbox-row {
         display: flex;
         align-items: center;
         gap: 12px;
     }
-    
+
     .checkbox-row label {
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
     }
-    
+
     input[type="checkbox"] {
         width: 20px;
         height: 20px;
         cursor: pointer;
     }
-    
+
     .btn-download {
         padding: 12px 20px;
         background-color: #28a745;
@@ -101,7 +104,7 @@
         transition: background-color 0.3s ease;
         margin-top: 8px;
     }
-    
+
     .btn-download:hover {
         background-color: #218838;
     }
@@ -128,7 +131,7 @@
         var prefixInput = document.getElementById('prefix');
         var inputValue = prefixInput.value;
         var prefixMessage = document.getElementById('prefix_message');
-        
+
         // Check for invalid characters
         var invalidChars = inputValue.match(/[^A-Fa-f0-9:]/g);
         if (invalidChars) {
@@ -137,10 +140,10 @@
             prefixInput.style.borderColor = '#dc3545';
             return false;
         }
-        
+
         // Clean the input (remove colons and convert to uppercase)
         var cleanPrefix = inputValue.replace(/:/g, '').toUpperCase();
-        
+
         // Check length
         if (cleanPrefix.length > 11) {
             prefixMessage.textContent = 'Prefix too long. Maximum 11 hex digits (5.5 bytes) allowed.';
@@ -148,52 +151,52 @@
             prefixInput.style.borderColor = '#dc3545';
             return false;
         }
-        
+
         // Show info message if input is valid
         prefixMessage.textContent = 'First byte will be normalized according to selected bit options.';
         prefixMessage.style.color = '#666';
         prefixInput.style.borderColor = '#ccc';
-        
+
         // Check if prefix actually changed
         var cleanPrefix = inputValue.replace(/:/g, '').toUpperCase();
         if (cleanPrefix !== lastValidPrefix) {
             lastValidPrefix = cleanPrefix;
             // Generate new MAC address only if prefix changed
-            setTimeout(function() {
+            setTimeout(function () {
                 generateMacAddress();
             }, 100);
         }
-        
+
         return true;
     }
-    
+
     function parsePrefix() {
         var prefixInput = document.getElementById('prefix').value;
-        
+
         // Validate input first
         if (!validatePrefixInput()) {
             return null;
         }
-        
+
         // Clean and return the prefix
         var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
         console.log('Parsed prefix:', prefix);
-        
+
         return prefix;
     }
-    
+
     function clearPrefixInput() {
         var inputElement = document.getElementById('prefix');
         var prefixMessage = document.getElementById('prefix_message');
-        
+
         inputElement.value = '';
         inputElement.style.borderColor = '#ccc';
         prefixMessage.textContent = 'First byte will be normalized according to selected bit options.';
         prefixMessage.style.color = '#666';
-        
+
         // Also clear the main error message
         document.getElementById('error_message').textContent = '';
-        
+
         // Reset last valid prefix and regenerate
         lastValidPrefix = '';
         generateMacAddress();
@@ -205,12 +208,12 @@
             return;
         }
         macAddress = prefix;
-        
+
         // Generate random hex digits to complete the MAC address
         while (macAddress.length < 12) {
             macAddress += getRandomHexDigit();
         }
-        
+
         // Apply locally administered bit to the first octet
         // Ensure we have at least 2 characters for the first octet
         var firstOctetHex = macAddress.substr(0, 2);
@@ -218,10 +221,10 @@
             firstOctetHex = firstOctetHex + '0';
         }
         var firstOctet = parseInt(firstOctetHex, 16);
-        
+
         // Bit 0 (LSB) of first octet: always 0 for unicast
         firstOctet &= 0xFE; // Clear bit 0 to ensure unicast
-        
+
         // Bit 1 of first octet: 1 = locally administered, 0 = universally administered
         var isLocallyAdministered = document.getElementById('locally_administered_checkbox').checked;
         if (isLocallyAdministered) {
@@ -229,11 +232,11 @@
         } else {
             firstOctet &= 0xFD; // Clear bit 1
         }
-        
+
         // Replace first octet in MAC address (always upper case)
         var newFirstOctet = firstOctet.toString(16).toUpperCase().padStart(2, '0');
         macAddress = newFirstOctet + macAddress.substr(2);
-        
+
         // Format the MAC address as XX:XX:XX:XX:XX:XX
         var formattedMac = '';
         for (var i = 0; i < 12; i += 2) {
@@ -244,43 +247,43 @@
         }
         document.getElementById('mac_address').value = formattedMac;
         document.getElementById('error_message').textContent = '';
-        
+
         // Generate 100 unique addresses
         generate100UniqueAddresses();
     }
-    
+
     function generateSingleMacAddress() {
         var prefix = parsePrefix();
         if (prefix === null) {
             return null;
         }
         var singleMacAddress = prefix;
-        
+
         // Generate random hex digits to complete the MAC address
         while (singleMacAddress.length < 12) {
             singleMacAddress += getRandomHexDigit();
         }
-        
+
         // Apply multicast and locally administered bits to the first octet
         var firstOctetHex = singleMacAddress.substr(0, 2);
         if (firstOctetHex.length === 1) {
             firstOctetHex = firstOctetHex + '0';
         }
         var firstOctet = parseInt(firstOctetHex, 16);
-        
+
         // Always ensure unicast (bit 0 = 0)
         firstOctet &= 0xFE;
-        
+
         var isLocallyAdministered = document.getElementById('locally_administered_checkbox').checked;
         if (isLocallyAdministered) {
             firstOctet |= 0x02;
         } else {
             firstOctet &= 0xFD;
         }
-        
+
         var newFirstOctet = firstOctet.toString(16).toUpperCase().padStart(2, '0');
         singleMacAddress = newFirstOctet + singleMacAddress.substr(2);
-        
+
         // Format as XX:XX:XX:XX:XX:XX
         var formatted = '';
         for (var i = 0; i < 12; i += 2) {
@@ -291,78 +294,78 @@
         }
         return formatted;
     }
-    
+
     function generate100UniqueAddresses() {
         generatedAddresses = [];
         var addressSet = new Set();
-        
+
         // Check if we have enough random space for 100 unique addresses
         var prefix = parsePrefix();
         if (prefix === null) {
             return;
         }
-        
+
         var randomDigits = 12 - prefix.length;
         var maxPossibleAddresses = Math.pow(16, randomDigits);
         var targetCount = Math.min(100, maxPossibleAddresses);
-        
+
         if (maxPossibleAddresses < 100) {
             console.warn('With prefix length', prefix.length, 'can only generate', maxPossibleAddresses, 'unique addresses');
         }
-        
+
         // Add the main generated address
         var mainAddress = document.getElementById('mac_address').value;
         if (mainAddress) {
             addressSet.add(mainAddress);
             generatedAddresses.push(mainAddress);
         }
-        
+
         // Generate additional unique addresses with safety limit
         var attempts = 0;
         var maxAttempts = targetCount * 10; // Safety limit to prevent infinite loops
-        
+
         while (generatedAddresses.length < targetCount && attempts < maxAttempts) {
             var newAddress = generateSingleMacAddress();
             attempts++;
-            
+
             if (newAddress && !addressSet.has(newAddress)) {
                 addressSet.add(newAddress);
                 generatedAddresses.push(newAddress);
             }
         }
-        
+
         console.log('Generated', generatedAddresses.length, 'unique MAC addresses out of', targetCount, 'target (', attempts, 'attempts)');
-        
+
         // Update download button text
         var downloadButton = document.getElementById('download_button');
         if (downloadButton) {
             downloadButton.textContent = 'Download ' + generatedAddresses.length + ' MAC Addresses (CSV)';
         }
     }
-    
+
     function downloadCSV() {
         if (generatedAddresses.length === 0) {
             alert('No MAC addresses generated. Please generate a MAC address first.');
             return;
         }
-        
+
         var csvContent = generatedAddresses.join('\n');
         var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         var link = document.createElement('a');
-        
+
         if (link.download !== undefined) {
             var url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            
+
             // Dynamic filename with count
             var filename = 'mac_addresses_' + generatedAddresses.length + '.csv';
             link.setAttribute('download', filename);
-            
+
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
+
             alert('Downloaded ' + generatedAddresses.length + ' MAC addresses to ' + filename);
         }
     }
@@ -373,17 +376,18 @@
     <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
         <label for="prefix" class="input-label">Prefix</label>
         <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
-            <input type="text" id="prefix" class="input-field" placeholder="e.g. 02:AB:CD or 02ABCD" 
-                   oninput="validatePrefixInput()" />
+            <input type="text" id="prefix" class="input-field" placeholder="e.g. 02:AB:CD or 02ABCD"
+                oninput="validatePrefixInput()" />
             <button class="btn-clear" onclick="clearPrefixInput()">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        <div id="prefix_message" style="font-size: 12px; color: #666; text-align: center; max-width: 300px; line-height: 1.3; min-height: 16px;">
+        <div id="prefix_message"
+            style="font-size: 12px; color: #666; text-align: center; max-width: 300px; line-height: 1.3; min-height: 16px;">
             First byte will be normalized according to selected bit options.
         </div>
     </div>
-    
+
     <div class="checkbox-container">
         <div class="checkbox-row">
             <input type="checkbox" id="locally_administered_checkbox" checked onchange="generateMacAddress()" />
@@ -397,7 +401,7 @@
             <!-- SVG will be inserted by JavaScript -->
         </button>
     </div>
-    
+
     <button id="download_button" onclick="downloadCSV()" class="btn-download">
         Download MAC Addresses (CSV)
     </button>
@@ -409,6 +413,11 @@
 </script>
 
 <div>
+    <h2>About this tool</h2>
+    <div>
+        This online tool can generate random or alternate MAC addresses, producing unique values suitable for testing
+        and temporary network configuration.
+    </div>
 
     <h2>MAC address format</h2>
 
