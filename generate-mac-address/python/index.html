@@ -16,7 +16,8 @@ The first byte is automatically normalized to ensure correct unicast behavior
 and optional local administration.
 </p>
 
-<pre><code class="language-python">
+<div style="position: relative;">
+<pre><code class="language-python" id="python_code">
 import random
 from typing import List
 
@@ -74,19 +75,57 @@ def generate_mac_addresses(
         macs.append(mac)
 
     return macs
+
+
+# Example usage
+if __name__ == "__main__":
+    macs = generate_mac_addresses(
+        prefix="02:AB",
+        locally_administered=True,
+        count=3
+    )
+
+    for mac in macs:
+        print(mac)
 </code></pre>
+<button id="copy_python_button" class="btn-copy" onclick="copyPythonCode()" style="position: absolute; top: 8px; right: 8px; z-index: 10;">
+    <!-- SVG will be inserted by JavaScript -->
+</button>
+</div>
 
-<h2>Example usage</h2>
+<script>
+function copyPythonCode() {
+    var codeElement = document.getElementById('python_code');
+    var codeText = codeElement.textContent;
+    var copyButton = document.getElementById('copy_python_button');
+    
+    if (codeText) {
+        navigator.clipboard.writeText(codeText).then(function() {
+            // Change icon to green checkmark
+            copyButton.innerHTML = SVG_ICONS.check;
+            copyButton.style.backgroundColor = '#4CAF50';
+            
+            // Restore original icon after 3 seconds
+            setTimeout(function() {
+                copyButton.innerHTML = SVG_ICONS.copy;
+                copyButton.style.backgroundColor = '#6c757d';
+            }, 3000);
+        }, function(err) {
+            console.error('Failed to copy code: ', err);
+            alert('Failed to copy code to clipboard');
+        });
+    } else {
+        alert('No code to copy.');
+    }
+}
 
-<pre><code>
-macs = generate_mac_addresses(
-    prefix="02:AB",
-    locally_administered=True,
-    count=3
-)
-
-for mac in macs:
-    print(mac)
-</code></pre>
+// Initialize copy button icon when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    var copyButton = document.getElementById('copy_python_button');
+    if (copyButton && typeof SVG_ICONS !== 'undefined') {
+        copyButton.innerHTML = SVG_ICONS.copy;
+    }
+});
+</script>
 
 {#bottom.html#}
