@@ -83,15 +83,18 @@
     }
     
     function ipToInteger(octets) {
-        return (octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3];
+        // Use unsigned 32-bit arithmetic to avoid negative numbers
+        return ((octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3]) >>> 0;
     }
     
     function integerToHex(num) {
-        return '0x' + num.toString(16).toUpperCase().padStart(8, '0');
+        // Ensure unsigned conversion
+        return '0x' + (num >>> 0).toString(16).toUpperCase().padStart(8, '0');
     }
     
     function integerToBinary(num) {
-        return num.toString(2).padStart(32, '0');
+        // Ensure unsigned conversion
+        return (num >>> 0).toString(2).padStart(32, '0');
     }
     
     function formatBinary(binary) {
