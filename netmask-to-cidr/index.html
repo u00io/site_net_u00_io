@@ -1,0 +1,360 @@
+{#header.html#}
+
+{%title=Netmask to CIDR Converter — u00 Network Tools%}
+{%description=Convert subnet masks to CIDR notation and get comprehensive subnet information. Calculate network address, broadcast address, and host count.%}
+
+<style>
+    /* Common input styles */
+    .input-field {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 24px;
+        width: 250px;
+        height: 40px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 0 8px;
+    }
+
+    .input-label {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+        margin: 24px 0;
+    }
+
+    .result-card {
+        background: #f8f9fa;
+        border: 1px solid #e1e5e9;
+        border-radius: 8px;
+        padding: 16px;
+    }
+
+    .result-title {
+        font-weight: bold;
+        color: #2d3748;
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .result-value {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 18px;
+        color: #01579B;
+        margin: 0;
+        word-break: break-all;
+    }
+
+    .binary-display {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 12px;
+        color: #666;
+        margin: 4px 0 0 0;
+        word-break: break-all;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-weight: bold;
+        min-height: 24px;
+        margin-top: 8px;
+    }
+
+    .info-section {
+        background: #e3f2fd;
+        border-left: 4px solid #01579B;
+        padding: 16px;
+        margin: 24px 0;
+        border-radius: 4px;
+    }
+</style>
+
+<h1>Netmask to CIDR Converter</h1>
+<p>
+    Convert subnet masks to CIDR notation and get comprehensive network information.
+    Perfect for network configuration and troubleshooting.
+</p>
+
+<div style="display: flex; flex-direction: column; gap: 16px; align-items: center; margin: 32px 0;">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <label for="netmask_input" class="input-label">Subnet Mask</label>
+        <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
+            <input type="text" id="netmask_input" class="input-field" placeholder="255.255.255.0"
+                oninput="convertNetmask()" />
+            <button id="clear_netmask_button" class="btn-clear">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        <div id="netmask_message" class="error-message"></div>
+    </div>
+    
+    <button onclick="convertNetmask()" class="big">Convert</button>
+</div>
+
+<div class="result-grid" id="results_section" style="display: none;">
+    <div class="result-card">
+        <div class="result-title">CIDR Notation</div>
+        <div class="result-value" id="cidr_result">-</div>
+        <div style="display: flex; flex-direction: row; gap: 0; align-items: center; margin-top: 8px;">
+            <input type="text" id="cidr_output" readonly class="input-field" style="width: 180px;" />
+            <button id="copy_cidr_button" class="btn-copy">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+    </div>
+
+    <div class="result-card">
+        <div class="result-title">Network Bits</div>
+        <div class="result-value" id="network_bits">-</div>
+        <div class="binary-display" id="netmask_binary">-</div>
+    </div>
+
+    <div class="result-card">
+        <div class="result-title">Host Bits</div>
+        <div class="result-value" id="host_bits">-</div>
+        <div class="binary-display">Available for host addressing</div>
+    </div>
+
+    <div class="result-card">
+        <div class="result-title">Total Addresses</div>
+        <div class="result-value" id="total_addresses">-</div>
+        <div class="binary-display">Including network and broadcast</div>
+    </div>
+
+    <div class="result-card">
+        <div class="result-title">Usable Host Addresses</div>
+        <div class="result-value" id="usable_hosts">-</div>
+        <div class="binary-display">Excluding network and broadcast</div>
+    </div>
+
+    <div class="result-card">
+        <div class="result-title">Wildcard Mask</div>
+        <div class="result-value" id="wildcard_mask">-</div>
+        <div class="binary-display">Inverse of subnet mask</div>
+    </div>
+</div>
+
+<div class="info-section" id="example_section" style="display: none;">
+    <h4 style="margin: 0 0 12px 0; color: #01579B;">Example Network Information</h4>
+    <p style="margin: 0 0 8px 0;"><strong>Network Address:</strong> <span id="example_network">192.168.1.0</span></p>
+    <p style="margin: 0 0 8px 0;"><strong>Broadcast Address:</strong> <span id="example_broadcast">192.168.1.255</span></p>
+    <p style="margin: 0 0 8px 0;"><strong>First Host:</strong> <span id="example_first">192.168.1.1</span></p>
+    <p style="margin: 0;"><strong>Last Host:</strong> <span id="example_last">192.168.1.254</span></p>
+</div>
+
+<script>
+    // Page-specific functions for netmask conversion
+    function validateNetmask(netmask) {
+        // Check format
+        const parts = netmask.split('.');
+        if (parts.length !== 4) {
+            return { valid: false, error: 'Netmask must have 4 octets separated by dots.' };
+        }
+
+        // Check each octet
+        const octets = [];
+        for (let i = 0; i < 4; i++) {
+            const num = parseInt(parts[i]);
+            if (isNaN(num) || num < 0 || num > 255) {
+                return { valid: false, error: `Invalid octet: ${parts[i]}. Must be 0-255.` };
+            }
+            octets.push(num);
+        }
+
+        // Convert to binary and check if it's a valid netmask
+        let binary = '';
+        for (let octet of octets) {
+            binary += octet.toString(2).padStart(8, '0');
+        }
+
+        // Valid netmask must have consecutive 1s followed by consecutive 0s
+        if (!/^1*0*$/.test(binary)) {
+            return { valid: false, error: 'Invalid subnet mask format. Must have consecutive 1s followed by 0s.' };
+        }
+
+        const networkBits = binary.indexOf('0');
+        const cidr = networkBits === -1 ? 32 : networkBits;
+
+        return {
+            valid: true,
+            octets: octets,
+            binary: binary,
+            cidr: cidr,
+            networkBits: cidr,
+            hostBits: 32 - cidr
+        };
+    }
+
+    function calculateWildcardMask(octets) {
+        return octets.map(octet => 255 - octet);
+    }
+
+    function calculateExampleAddresses(cidr) {
+        // Use 192.168.1.0 as example base
+        const baseIP = [192, 168, 1, 0];
+        const hostBits = 32 - cidr;
+        const totalHosts = Math.pow(2, hostBits);
+        
+        // Calculate network address (base remains the same for /24 and higher)
+        const networkAddr = baseIP.slice();
+        
+        // Calculate broadcast address
+        const broadcastAddr = baseIP.slice();
+        if (hostBits > 0) {
+            const hostMask = totalHosts - 1;
+            broadcastAddr[3] = (broadcastAddr[3] & (255 << hostBits)) | (hostMask & 255);
+            if (hostBits > 8) {
+                broadcastAddr[2] = (broadcastAddr[2] & (255 << (hostBits - 8))) | ((hostMask >> 8) & 255);
+            }
+            if (hostBits > 16) {
+                broadcastAddr[1] = (broadcastAddr[1] & (255 << (hostBits - 16))) | ((hostMask >> 16) & 255);
+            }
+        }
+        
+        // First and last host
+        const firstHost = networkAddr.slice();
+        const lastHost = broadcastAddr.slice();
+        
+        if (totalHosts > 2) {
+            firstHost[3] += 1;
+            lastHost[3] -= 1;
+        }
+        
+        return {
+            network: networkAddr.join('.'),
+            broadcast: broadcastAddr.join('.'),
+            firstHost: firstHost.join('.'),
+            lastHost: lastHost.join('.')
+        };
+    }
+
+    function formatBinary(binary) {
+        // Format binary as groups of 8 with dots
+        return binary.match(/.{8}/g).join('.');
+    }
+
+    function convertNetmask() {
+        const input = document.getElementById('netmask_input').value.trim();
+        const messageEl = document.getElementById('netmask_message');
+        const resultsSection = document.getElementById('results_section');
+        const exampleSection = document.getElementById('example_section');
+
+        // Clear previous messages
+        messageEl.textContent = '';
+        messageEl.style.color = '#dc3545';
+
+        if (!input) {
+            resultsSection.style.display = 'none';
+            exampleSection.style.display = 'none';
+            return;
+        }
+
+        const validation = validateNetmask(input);
+        if (!validation.valid) {
+            messageEl.textContent = validation.error;
+            resultsSection.style.display = 'none';
+            exampleSection.style.display = 'none';
+            return;
+        }
+
+        // Show results
+        resultsSection.style.display = 'grid';
+        exampleSection.style.display = 'block';
+
+        // Update CIDR result
+        document.getElementById('cidr_result').textContent = `/${validation.cidr}`;
+        document.getElementById('cidr_output').value = `/${validation.cidr}`;
+
+        // Update network information
+        document.getElementById('network_bits').textContent = validation.networkBits;
+        document.getElementById('host_bits').textContent = validation.hostBits;
+        document.getElementById('netmask_binary').textContent = formatBinary(validation.binary);
+
+        // Calculate addresses
+        const totalAddresses = Math.pow(2, validation.hostBits);
+        const usableHosts = Math.max(0, totalAddresses - 2);
+
+        document.getElementById('total_addresses').textContent = totalAddresses.toLocaleString();
+        document.getElementById('usable_hosts').textContent = usableHosts.toLocaleString();
+
+        // Calculate wildcard mask
+        const wildcardMask = calculateWildcardMask(validation.octets);
+        document.getElementById('wildcard_mask').textContent = wildcardMask.join('.');
+
+        // Show example addresses
+        const examples = calculateExampleAddresses(validation.cidr);
+        document.getElementById('example_network').textContent = examples.network;
+        document.getElementById('example_broadcast').textContent = examples.broadcast;
+        document.getElementById('example_first').textContent = examples.firstHost;
+        document.getElementById('example_last').textContent = examples.lastHost;
+
+        // Clear error message
+        messageEl.textContent = '';
+    }
+
+    function clearNetmaskInput() {
+        document.getElementById('netmask_input').value = '';
+        document.getElementById('netmask_message').textContent = '';
+        document.getElementById('results_section').style.display = 'none';
+        document.getElementById('example_section').style.display = 'none';
+    }
+
+    // Initialize buttons using header.html functions
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof initializeCopyButton === 'function') {
+            initializeCopyButton('copy_cidr_button', 'cidr_output');
+        }
+        
+        if (typeof initializeClearButton === 'function') {
+            initializeClearButton('clear_netmask_button', 'netmask_input', 'netmask_message', clearNetmaskInput);
+        }
+        
+        // Set some example values on load
+        const examples = ['255.255.255.0', '255.255.0.0', '255.255.255.128'];
+        const randomExample = examples[Math.floor(Math.random() * examples.length)];
+        document.getElementById('netmask_input').placeholder = randomExample;
+    });
+</script>
+
+<div>
+    <h2>About this tool</h2>
+    <div>
+        This tool converts subnet masks (netmasks) to CIDR notation and provides comprehensive network information
+        including host counts, wildcard masks, and example network addresses.
+    </div>
+
+    <h2>Common subnet masks</h2>
+    <ul>
+        <li><strong>/8</strong> — 255.0.0.0 (16,777,214 hosts)</li>
+        <li><strong>/16</strong> — 255.255.0.0 (65,534 hosts)</li>
+        <li><strong>/24</strong> — 255.255.255.0 (254 hosts)</li>
+        <li><strong>/25</strong> — 255.255.255.128 (126 hosts)</li>
+        <li><strong>/26</strong> — 255.255.255.192 (62 hosts)</li>
+        <li><strong>/27</strong> — 255.255.255.224 (30 hosts)</li>
+        <li><strong>/28</strong> — 255.255.255.240 (14 hosts)</li>
+        <li><strong>/29</strong> — 255.255.255.248 (6 hosts)</li>
+        <li><strong>/30</strong> — 255.255.255.252 (2 hosts)</li>
+    </ul>
+
+    <h2>Understanding CIDR notation</h2>
+    <p>
+        CIDR (Classless Inter-Domain Routing) notation represents the subnet mask as a suffix indicating 
+        the number of network bits. For example, /24 means the first 24 bits are used for the network portion.
+    </p>
+
+    <h3>Subnet mask formats</h3>
+    <ul>
+        <li><strong>Dotted decimal</strong> — 255.255.255.0</li>
+        <li><strong>CIDR notation</strong> — /24</li>
+        <li><strong>Binary</strong> — 11111111.11111111.11111111.00000000</li>
+        <li><strong>Wildcard mask</strong> — 0.0.0.255 (inverse of subnet mask)</li>
+    </ul>
+</div>
+
+{#bottom.html#}
