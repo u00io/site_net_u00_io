@@ -1,0 +1,155 @@
+{#header.html#}
+
+{%title=Netmask to CIDR Converter — u00 Network Tools%}
+{%description=Learn what CIDR notation is and how it works. A simple explanation of CIDR, subnet masks, and IPv4 network prefixes in plain language.%}
+
+<h1>What Is CIDR Notation?</h1>
+
+<p>
+CIDR notation is a simple way to describe how IPv4 networks are divided.
+It is used instead of long subnet masks and makes network configuration
+easier to read and understand.
+</p>
+
+<p>
+You may have already seen CIDR notation written like this:
+</p>
+
+<pre>
+192.168.1.0/24
+10.0.0.0/8
+</pre>
+
+<p>
+The number after the slash indicates how many bits are used for the
+network portion of the IP address.
+</p>
+
+<h2>Why CIDR notation exists</h2>
+
+<p>
+In the early days of the internet, IP addresses were divided into fixed
+classes: Class A, Class B, and Class C. Each class had a predefined subnet
+mask.
+</p>
+
+<p>
+This approach wasted a large number of IP addresses. Many networks were
+either too large or too small for the fixed class sizes.
+</p>
+
+<p>
+CIDR (Classless Inter-Domain Routing) was introduced to remove these
+limitations. It allows networks to be split into flexible sizes based on
+actual needs.
+</p>
+
+<h2>How CIDR notation works</h2>
+
+<p>
+An IPv4 address consists of 32 bits. CIDR notation simply tells how many
+of those bits belong to the network.
+</p>
+
+<p>
+For example:
+</p>
+
+<ul>
+  <li><strong>/8</strong> means 8 bits for the network and 24 bits for hosts</li>
+  <li><strong>/16</strong> means 16 bits for the network and 16 bits for hosts</li>
+  <li><strong>/24</strong> means 24 bits for the network and 8 bits for hosts</li>
+</ul>
+
+<p>
+The remaining bits are used to identify individual devices within the
+network.
+</p>
+
+<h2>CIDR notation and subnet masks</h2>
+
+<p>
+CIDR notation is directly related to subnet masks. Each CIDR prefix
+corresponds to a specific subnet mask.
+</p>
+
+<p>
+Here are some common examples:
+</p>
+
+<pre>
+/8  → 255.0.0.0
+/16 → 255.255.0.0
+/24 → 255.255.255.0
+</pre>
+
+<p>
+While subnet masks show the same information, CIDR notation is shorter
+and easier to read.
+</p>
+
+<h2>Why CIDR notation is useful</h2>
+
+<p>
+CIDR notation is widely used because it simplifies many networking tasks.
+It makes configurations clearer and reduces errors.
+</p>
+
+<ul>
+  <li>It allows flexible network sizes</li>
+  <li>It reduces wasted IP addresses</li>
+  <li>It makes routing and firewall rules easier to understand</li>
+  <li>It is commonly used in cloud and enterprise networks</li>
+</ul>
+
+<h2>Common CIDR examples</h2>
+
+<p>
+Some CIDR prefixes are used very frequently in practice:
+</p>
+
+<ul>
+  <li><strong>/24</strong> — small networks (256 total addresses)</li>
+  <li><strong>/16</strong> — medium-sized networks</li>
+  <li><strong>/8</strong> — very large networks</li>
+  <li><strong>/32</strong> — a single IP address</li>
+</ul>
+
+<p>
+These prefixes help quickly understand the size of a network without
+doing manual calculations.
+</p>
+
+<h2>How to convert a subnet mask to CIDR</h2>
+
+<p>
+To convert a subnet mask to CIDR notation, you count the number of
+consecutive <strong>1</strong> bits in the mask.
+</p>
+
+<p>
+For example, the subnet mask <code>255.255.255.0</code> contains 24
+network bits, so it corresponds to <code>/24</code>.
+</p>
+
+<p>
+You can use the
+<a href="/netmask-to-cidr/">Netmask to CIDR Converter</a>
+to perform this conversion instantly without manual calculation.
+</p>
+
+<h2>Summary</h2>
+
+<p>
+CIDR notation is a compact and flexible way to describe IPv4 networks.
+It replaces rigid class-based addressing and makes modern networking
+simpler and more efficient.
+</p>
+
+<p>
+Understanding CIDR helps you read network configurations, design address
+spaces, and troubleshoot routing issues more easily.
+</p>
+
+
+{#bottom.html#}
