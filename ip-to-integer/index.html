@@ -101,6 +101,28 @@
         return binary.match(/.{8}/g).join('.');
     }
     
+    function integerToBigEndian(num) {
+        // Big-endian (network byte order) - most significant byte first
+        var bytes = [
+            (num >>> 24) & 0xFF,
+            (num >>> 16) & 0xFF,
+            (num >>> 8) & 0xFF,
+            num & 0xFF
+        ];
+        return '0x' + bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join('');
+    }
+    
+    function integerToLittleEndian(num) {
+        // Little-endian (x86 byte order) - least significant byte first
+        var bytes = [
+            num & 0xFF,
+            (num >>> 8) & 0xFF,
+            (num >>> 16) & 0xFF,
+            (num >>> 24) & 0xFF
+        ];
+        return '0x' + bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join('');
+    }
+    
     function convertIP() {
         var ipInput = document.getElementById('ip_input').value.trim();
         var errorElement = document.getElementById('error_message');
@@ -129,11 +151,15 @@
         var hex = integerToHex(integer);
         var binary = integerToBinary(integer);
         var formattedBinary = formatBinary(binary);
+        var bigEndian = integerToBigEndian(integer);
+        var littleEndian = integerToLittleEndian(integer);
         
         // Display results
         document.getElementById('decimal_result').value = integer.toString();
         document.getElementById('hex_result').value = hex;
         document.getElementById('binary_result').value = formattedBinary;
+        document.getElementById('big_endian_result').value = bigEndian;
+        document.getElementById('little_endian_result').value = littleEndian;
         
         console.log('Converted IP:', ipInput, '→', integer);
     }
@@ -142,6 +168,8 @@
         document.getElementById('decimal_result').value = '';
         document.getElementById('hex_result').value = '';
         document.getElementById('binary_result').value = '';
+        document.getElementById('big_endian_result').value = '';
+        document.getElementById('little_endian_result').value = '';
     }
     
     function clearIPInput() {
@@ -199,6 +227,22 @@
             <span class="format-label">Binary:</span>
             <input type="text" id="binary_result" readonly class="result-display" />
             <button class="btn-copy" onclick="copyInputValueToClipboard('binary_copy', 'binary_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Big-endian:</span>
+            <input type="text" id="big_endian_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('big_endian_copy', 'big_endian_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Little-endian:</span>
+            <input type="text" id="little_endian_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('little_endian_copy', 'little_endian_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
