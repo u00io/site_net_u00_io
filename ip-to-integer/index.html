@@ -1,0 +1,226 @@
+{#header.html#}
+
+{%title=Convert IP Address to Integer — u00 Network Tools%}
+{%description=Convert IP addresses to their integer representations for networking and programming purposes.%}
+
+<style>
+    /* IP converter specific styles */
+    .ip-input {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 18px;
+        width: 200px;
+        height: 40px;
+        text-align: center;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        padding: 0 12px;
+    }
+    
+    .result-display {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 18px;
+        width: 300px;
+        height: 40px;
+        text-align: center;
+        background-color: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 4px;
+        padding: 0 12px;
+    }
+    
+    .conversion-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
+    
+    .conversion-row {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+    }
+    
+    .format-label {
+        font-weight: bold;
+        font-size: 14px;
+        min-width: 100px;
+        text-align: right;
+    }
+    
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        min-height: 16px;
+        text-align: center;
+    }
+</style>
+
+<script>
+    // IP to Integer conversion functions
+    function validateIPAddress(ip) {
+        var ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+        var match = ip.match(ipRegex);
+        
+        if (!match) {
+            return { valid: false, error: 'Invalid IP format. Use format: 192.168.1.1' };
+        }
+        
+        for (var i = 1; i <= 4; i++) {
+            var octet = parseInt(match[i], 10);
+            if (octet < 0 || octet > 255) {
+                return { valid: false, error: 'Octets must be between 0 and 255' };
+            }
+        }
+        
+        return { valid: true, octets: [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseInt(match[4])] };
+    }
+    
+    function ipToInteger(octets) {
+        return (octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3];
+    }
+    
+    function integerToHex(num) {
+        return '0x' + num.toString(16).toUpperCase().padStart(8, '0');
+    }
+    
+    function integerToBinary(num) {
+        return num.toString(2).padStart(32, '0');
+    }
+    
+    function formatBinary(binary) {
+        return binary.match(/.{8}/g).join('.');
+    }
+    
+    function convertIP() {
+        var ipInput = document.getElementById('ip_input').value.trim();
+        var errorElement = document.getElementById('error_message');
+        
+        if (!ipInput) {
+            clearResults();
+            errorElement.textContent = '';
+            return;
+        }
+        
+        var validation = validateIPAddress(ipInput);
+        
+        if (!validation.valid) {
+            errorElement.textContent = validation.error;
+            document.getElementById('ip_input').style.borderColor = '#dc3545';
+            clearResults();
+            return;
+        }
+        
+        // Clear error and reset border
+        errorElement.textContent = '';
+        document.getElementById('ip_input').style.borderColor = '#28a745';
+        
+        // Convert to different formats
+        var integer = ipToInteger(validation.octets);
+        var hex = integerToHex(integer);
+        var binary = integerToBinary(integer);
+        var formattedBinary = formatBinary(binary);
+        
+        // Display results
+        document.getElementById('decimal_result').value = integer.toString();
+        document.getElementById('hex_result').value = hex;
+        document.getElementById('binary_result').value = formattedBinary;
+        
+        console.log('Converted IP:', ipInput, '→', integer);
+    }
+    
+    function clearResults() {
+        document.getElementById('decimal_result').value = '';
+        document.getElementById('hex_result').value = '';
+        document.getElementById('binary_result').value = '';
+    }
+    
+    function clearIPInput() {
+        document.getElementById('ip_input').value = '';
+        document.getElementById('ip_input').style.borderColor = '#ccc';
+        document.getElementById('error_message').textContent = '';
+        clearResults();
+    }
+    
+    // Set example IP on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('ip_input').value = '192.168.1.1';
+        convertIP();
+    });
+</script>
+
+<h1>Convert IP Address to Integer</h1>
+
+<p>
+    This tool converts IPv4 addresses to their unsigned integer representations in decimal, hexadecimal, and binary formats.
+    Useful for networking calculations, database storage, and programming applications.
+</p>
+
+<div class="conversion-container">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <label for="ip_input" class="input-label">IPv4 Address</label>
+        <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
+            <input type="text" id="ip_input" class="ip-input" placeholder="192.168.1.1" 
+                   oninput="convertIP()" />
+            <button class="btn-clear" onclick="clearIPInput()">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        <div id="error_message" class="error-message"></div>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px;">
+        <div class="conversion-row">
+            <span class="format-label">Decimal:</span>
+            <input type="text" id="decimal_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_copy', 'decimal_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Hexadecimal:</span>
+            <input type="text" id="hex_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('hex_copy', 'hex_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Binary:</span>
+            <input type="text" id="binary_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('binary_copy', 'binary_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize SVG icons when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set clear button icon
+        var clearButtons = document.querySelectorAll('.btn-clear');
+        clearButtons.forEach(function(btn) {
+            if (typeof SVG_ICONS !== 'undefined') {
+                btn.innerHTML = SVG_ICONS.clear;
+            }
+        });
+        
+        // Set copy button icons
+        var copyButtons = document.querySelectorAll('.btn-copy');
+        copyButtons.forEach(function(btn) {
+            if (typeof SVG_ICONS !== 'undefined') {
+                btn.innerHTML = SVG_ICONS.copy;
+            }
+        });
+    });
+</script>
+
+{#bottom.html#}
