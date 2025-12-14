@@ -243,6 +243,54 @@ XX:XX:XX:XX:XX:XX
         <strong>unicast</strong> MAC addresses rather than multicast ones.
     </p>
 
+    <h3>Organizationally Unique Identifier (OUI)</h3>
+
+    <p>
+        The first <strong>three bytes</strong> of a MAC address are known as the
+        <strong>Organizationally Unique Identifier (OUI)</strong>.
+        An OUI identifies the organization or vendor that assigned the address.
+    </p>
+
+    <pre>
+OUI:XX:XX:XX
+</pre>
+
+    <p>
+        For <strong>globally unique</strong> MAC addresses, OUIs are assigned by
+        the IEEE and are used to identify hardware manufacturers.
+    </p>
+
+    <p>
+        When the <strong>U/L bit</strong> is set to <code>1</code> (locally administered),
+        the address is <strong>not associated with a real vendor</strong>,
+        and the OUI field does not represent an IEEE-assigned manufacturer.
+    </p>
+
+    <h4>Vendor-based MAC addresses</h4>
+
+    <p>
+        Vendor-based MAC addresses use a real IEEE-assigned OUI and are typically
+        found on physical network interfaces.
+    </p>
+
+    <p>
+        Using real vendor OUIs in test environments may lead to address conflicts
+        or unintended interaction with network equipment.
+    </p>
+
+    <h4>Locally administered addresses and OUI</h4>
+
+    <p>
+        For locally administered MAC addresses, the OUI field can be used freely
+        for internal or experimental purposes.
+    </p>
+
+    <p>
+        This generator produces <strong>locally administered</strong> MAC addresses,
+        which ensures that generated addresses do not collide with real
+        hardware vendor assignments.
+    </p>
+
 
 </div>
 
