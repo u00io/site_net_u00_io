@@ -127,12 +127,13 @@
     function validatePrefixInput() {
         var prefixInput = document.getElementById('prefix');
         var inputValue = prefixInput.value;
-        var errorElement = document.getElementById('error_message');
+        var prefixMessage = document.getElementById('prefix_message');
         
         // Check for invalid characters
         var invalidChars = inputValue.match(/[^A-Fa-f0-9:]/g);
         if (invalidChars) {
-            errorElement.textContent = 'Invalid characters: only hex digits (0-9, A-F) and colons (:) are allowed.';
+            prefixMessage.textContent = 'Invalid characters: only hex digits (0-9, A-F) and colons (:) are allowed.';
+            prefixMessage.style.color = '#dc3545';
             prefixInput.style.borderColor = '#dc3545';
             return false;
         }
@@ -142,13 +143,15 @@
         
         // Check length
         if (cleanPrefix.length > 11) {
-            errorElement.textContent = 'Prefix too long. Maximum 11 hex digits (5.5 bytes) allowed.';
+            prefixMessage.textContent = 'Prefix too long. Maximum 11 hex digits (5.5 bytes) allowed.';
+            prefixMessage.style.color = '#dc3545';
             prefixInput.style.borderColor = '#dc3545';
             return false;
         }
         
-        // Clear error if input is valid
-        errorElement.textContent = '';
+        // Show info message if input is valid
+        prefixMessage.textContent = 'First byte will be normalized according to selected bit options.';
+        prefixMessage.style.color = '#666';
         prefixInput.style.borderColor = '#ccc';
         return true;
     }
@@ -170,11 +173,15 @@
     
     function clearPrefixInput() {
         var inputElement = document.getElementById('prefix');
-        var errorElement = document.getElementById('error_message');
+        var prefixMessage = document.getElementById('prefix_message');
         
         inputElement.value = '';
         inputElement.style.borderColor = '#ccc';
-        errorElement.textContent = '';
+        prefixMessage.textContent = 'First byte will be normalized according to selected bit options.';
+        prefixMessage.style.color = '#666';
+        
+        // Also clear the main error message
+        document.getElementById('error_message').textContent = '';
         
         // Regenerate MAC address after clearing
         generateMacAddress();
@@ -360,7 +367,7 @@
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        <div style="font-size: 12px; color: #666; text-align: center; max-width: 300px; line-height: 1.3;">
+        <div id="prefix_message" style="font-size: 12px; color: #666; text-align: center; max-width: 300px; line-height: 1.3; min-height: 16px;">
             First byte will be normalized according to selected bit options.
         </div>
     </div>
