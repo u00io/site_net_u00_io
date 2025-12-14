@@ -1,20 +1,22 @@
 </div>
 <section class="bottom">
-<div style="max-width: 1000px; margin: 0 auto;">
-    <div>
-        <div style="display: flex; flex-direction: row; justify-content: space-between; padding: 12px; text-align: center; border-top: 1px solid #CCCCCC; margin-top: 12px;">
-            <div id="first-column" style="display: flex; flex-direction: column; gap: 6px; align-items: start;">
-                <a href="/"><strong>U00 - Open Source Software</strong></a>
-                <a href="/generate-mac-address/"><strong>Generate MAC Address</strong></a>
+    <div style="max-width: 1000px; margin: 0 auto;">
+        <div>
+            <div
+                style="display: flex; flex-direction: row; justify-content: space-between; padding: 12px; text-align: center; border-top: 1px solid #CCCCCC; margin-top: 12px;">
+                <div id="first-column" style="display: flex; flex-direction: column; gap: 6px; align-items: start;">
+                    <a href="/"><strong>U00 - Open Source Software</strong></a>
+                    <a href="/generate-mac-address/"><strong>Generate MAC Address</strong></a>
+                </div>
+                <div id="second-column" style="display: flex; flex-direction: column; gap: 6px;">
+                    <a href="https://u00.io/">U00 project</a>
+                </div>
             </div>
-            <div id="second-column" style="display: flex; flex-direction: column; gap: 6px;">
-                <a href="https://u00.io/">U00 project</a>
-            </div>
-        </div>
-        
-        <!-- Share and QR buttons -->
-        <div style="text-align: center; margin: 16px 0 8px 0; display: flex; gap: 8px; justify-content: center; align-items: center;">
-            <button id="share-button" onclick="shareCurrentPage()" style="
+
+            <!-- Share and QR buttons -->
+            <div
+                style="text-align: center; margin: 16px 0 8px 0; display: flex; gap: 8px; justify-content: center; align-items: center;">
+                <button id="share-button" onclick="shareCurrentPage()" style="
                 background-color: #007bff;
                 color: white;
                 border: none;
@@ -27,14 +29,18 @@
                 gap: 6px;
                 transition: background-color 0.3s ease;
             " onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
-                Share
-            </button>
-            
-            <button id="qr-button" onclick="showQRCode()" style="
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                    </svg>
+                    Share
+                </button>
+
+                <button id="qr-button" onclick="showQRCode()" style="
                 background-color: #28a745;
                 color: white;
                 border: none;
@@ -47,17 +53,21 @@
                 gap: 6px;
                 transition: background-color 0.3s ease;
             " onmouseover="this.style.backgroundColor='#218838'" onmouseout="this.style.backgroundColor='#28a745'">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/><path d="M14 17h2v2h-2v-2z"/>
-                    <path d="M19 14h2v2h-2v-2z"/><path d="M17 19h2v2h-2v-2z"/>
-                </svg>
-                QR Code
-            </button>
-        </div>
-        
-        <!-- QR Code Modal -->
-        <div id="qr-modal" style="
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <path d="M14 17h2v2h-2v-2z" />
+                        <path d="M19 14h2v2h-2v-2z" />
+                        <path d="M17 19h2v2h-2v-2z" />
+                    </svg>
+                    QR Code
+                </button>
+            </div>
+
+            <!-- QR Code Modal -->
+            <div id="qr-modal" style="
             display: none;
             position: fixed;
             top: 0;
@@ -69,7 +79,7 @@
             justify-content: center;
             align-items: center;
         ">
-            <div style="
+                <div style="
                 background: white;
                 padding: 20px;
                 border-radius: 8px;
@@ -77,10 +87,10 @@
                 max-width: 90%;
                 max-height: 90%;
             ">
-                <h3 style="margin-top: 0;">QR Code for this page</h3>
-                <canvas id="qr-canvas" style="border: 1px solid #ddd;"></canvas>
-                <div style="margin-top: 16px;">
-                    <button onclick="closeQRCode()" style="
+                    <h3 style="margin-top: 0;">QR Code for this page</h3>
+                    <canvas id="qr-canvas" style="border: 1px solid #ddd;"></canvas>
+                    <div style="margin-top: 16px;">
+                        <button onclick="closeQRCode()" style="
                         background-color: #6c757d;
                         color: white;
                         border: none;
@@ -88,146 +98,92 @@
                         border-radius: 4px;
                         cursor: pointer;
                     ">Close</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div style="font-size: 8pt; text-align: center; color: #777777;">
-            Copyright © 2020-2026 U00 Open Source Software. All rights reserved.
+
+            <div style="font-size: 8pt; text-align: center; color: #777777;">
+                Copyright © 2020-2026 U00 Open Source Software. All rights reserved.
+            </div>
         </div>
     </div>
-</div>
 </section>
 
 <div id="cookie_notification">
-<div>
-    This site uses cookies to offer you a better browsing experience.
-</div>
-<div>
-    <button class="button cookie_accept">Accept</button>
-</div>
+    <div>
+        This site uses cookies to offer you a better browsing experience.
+    </div>
+    <div>
+        <button class="button cookie_accept">Accept</button>
+    </div>
 </div>
 
 <script>
-function checkCookies(){
-let cookieDate = localStorage.getItem('cookieDate');
-let cookieNotification = document.getElementById('cookie_notification');
-let cookieBtn = cookieNotification.querySelector('.cookie_accept');
-if( !cookieDate || (+cookieDate + 31536000000) < Date.now() ){
-    cookieNotification.classList.add('show');
-}
-cookieBtn.addEventListener('click', function(){
-    localStorage.setItem( 'cookieDate', Date.now() );
-    cookieNotification.classList.remove('show');
-})
-}
-checkCookies();
-
-// Share functionality
-function shareCurrentPage() {
-    const shareData = {
-        title: document.title,
-        text: document.querySelector('meta[name="description"]')?.content || 'Useful network tools',
-        url: window.location.href
-    };
-
-    // Check if Web Share API is supported
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-        navigator.share(shareData)
-            .then(() => console.log('Successfully shared'))
-            .catch((error) => console.log('Error sharing:', error));
-    } else {
-        // Fallback: copy URL to clipboard
-        navigator.clipboard.writeText(window.location.href)
-            .then(() => {
-                // Show temporary feedback
-                const button = document.getElementById('share-button');
-                const originalText = button.innerHTML;
-                button.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg> Copied!';;
-                button.style.backgroundColor = '#28a745';
-                
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.style.backgroundColor = '#007bff';
-                }, 2000);
-            })
-            .catch((error) => {
-                console.log('Error copying to clipboard:', error);
-                alert('Failed to copy URL');
-            });
+    function checkCookies() {
+        let cookieDate = localStorage.getItem('cookieDate');
+        let cookieNotification = document.getElementById('cookie_notification');
+        let cookieBtn = cookieNotification.querySelector('.cookie_accept');
+        if (!cookieDate || (+cookieDate + 31536000000) < Date.now()) {
+            cookieNotification.classList.add('show');
+        }
+        cookieBtn.addEventListener('click', function () {
+            localStorage.setItem('cookieDate', Date.now());
+            cookieNotification.classList.remove('show');
+        })
     }
-}
+    checkCookies();
 
-// QR Code generator using qrcode.js library
-function generateQRCode(text, size) {
-    const canvas = document.getElementById('qr-canvas');
-    
-    // Load qrcode.js library if not already loaded
-    if (typeof QRCode === 'undefined') {
-        loadQRCodeLibrary().then(() => {
-            createQRCode(text, canvas, size);
-        });
-    } else {
-        createQRCode(text, canvas, size);
+    // Share functionality
+    function shareCurrentPage() {
+        const shareData = {
+            title: document.title,
+            text: document.querySelector('meta[name="description"]')?.content || 'Useful network tools',
+            url: window.location.href
+        };
+
+        // Check if Web Share API is supported
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+            navigator.share(shareData)
+                .then(() => console.log('Successfully shared'))
+                .catch((error) => console.log('Error sharing:', error));
+        } else {
+            // Fallback: copy URL to clipboard
+            navigator.clipboard.writeText(window.location.href)
+                .then(() => {
+                    // Show temporary feedback
+                    const button = document.getElementById('share-button');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg> Copied!';;
+                    button.style.backgroundColor = '#28a745';
+
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.backgroundColor = '#007bff';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    console.log('Error copying to clipboard:', error);
+                    alert('Failed to copy URL');
+                });
+        }
     }
-}
 
-function loadQRCodeLibrary() {
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = '/js/qrcode.min.js';
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-    });
-}
-
-function createQRCode(text, canvas, size) {
-    QRCode.toCanvas(canvas, text, {
-        width: size,
-        height: size,
-        margin: 2,
-        color: {
-            dark: '#000000',
-            light: '#FFFFFF'
-        }
-    }, function(error) {
-        if (error) {
-            console.error('QR Code generation error:', error);
-            // Fallback: show text if QR generation fails
-            const ctx = canvas.getContext('2d');
-            canvas.width = size;
-            canvas.height = size;
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(0, 0, size, size);
-            ctx.fillStyle = '#000000';
-            ctx.font = '12px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('QR generation failed', size/2, size/2);
-        }
-    });
-}
-
-function showQRCode() {
-    const modal = document.getElementById('qr-modal');
-    modal.style.display = 'flex';
-    
-    // Generate QR code for current URL
-    generateQRCode(window.location.href, 200);
-    
-    // Close modal when clicking outside
-    modal.onclick = function(e) {
-        if (e.target === modal) {
-            closeQRCode();
-        }
-    };
-}
-
-function closeQRCode() {
-    document.getElementById('qr-modal').style.display = 'none';
-}
 </script>
 
-</body>
-</html>
+<div style="display:flex;align-items: center;justify-content: center;text-align: center;margin-top: 40px;">
+    <div id="qrcode" style="border: 2px solid #888888;padding: 10px;"></div>
+    <script type="text/javascript">
+        var qrcode = new QRCode("qrcode", {
+            text: window.location.href,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#777777",
+            correctLevel: QRCode.CorrectLevel.H,
+        });            
+    </script>
+</div>
 
+</body>
+
+</html>
