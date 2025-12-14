@@ -1,7 +1,7 @@
 {#header.html#}
 
 {%title=Convert IP Address to Integer — u00 Network Tools%}
-{%description=Convert IP addresses to their integer representations for networking and programming purposes.%}
+{%description=Convert IP addresses to integer representations in decimal, hexadecimal, and binary formats. Useful for networking and programming tasks.%}
 
 <style>
     /* IP converter specific styles */
@@ -15,7 +15,7 @@
         border-radius: 4px;
         padding: 0 12px;
     }
-    
+
     .result-display {
         font-family: 'Consolas', 'Courier New', Courier, monospace;
         font-size: 18px;
@@ -27,7 +27,7 @@
         border-radius: 4px;
         padding: 0 12px;
     }
-    
+
     .conversion-container {
         display: flex;
         flex-direction: column;
@@ -39,21 +39,21 @@
         border-radius: 8px;
         background-color: #fafafa;
     }
-    
+
     .conversion-row {
         display: flex;
         flex-direction: row;
         gap: 12px;
         align-items: center;
     }
-    
+
     .format-label {
         font-weight: bold;
         font-size: 14px;
         min-width: 100px;
         text-align: right;
     }
-    
+
     .error-message {
         color: #dc3545;
         font-size: 12px;
@@ -67,45 +67,45 @@
     function validateIPAddress(ip) {
         var ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
         var match = ip.match(ipRegex);
-        
+
         if (!match) {
             return { valid: false, error: 'Invalid IP format. Use format: 192.168.1.1' };
         }
-        
+
         for (var i = 1; i <= 4; i++) {
             var octet = parseInt(match[i], 10);
             if (octet < 0 || octet > 255) {
                 return { valid: false, error: 'Octets must be between 0 and 255' };
             }
         }
-        
+
         return { valid: true, octets: [parseInt(match[1]), parseInt(match[2]), parseInt(match[3]), parseInt(match[4])] };
     }
-    
+
     function ipToInteger(octets) {
         // Use unsigned 32-bit arithmetic to avoid negative numbers
         return ((octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3]) >>> 0;
     }
-    
+
     function integerToHex(num) {
         // Ensure unsigned conversion
         return '0x' + (num >>> 0).toString(16).toUpperCase().padStart(8, '0');
     }
-    
+
     function integerToBinary(num) {
         // Ensure unsigned conversion
         return (num >>> 0).toString(2).padStart(32, '0');
     }
-    
+
     function formatBinary(binary) {
         return binary.match(/.{8}/g).join('.');
     }
-    
+
     function decimalToBigEndian(num) {
         // Big-endian decimal representation
         return (num >>> 0).toString();
     }
-    
+
     function decimalToLittleEndian(num) {
         // Little-endian decimal - swap byte order
         var bytes = [
@@ -117,12 +117,12 @@
         var swapped = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
         return (swapped >>> 0).toString();
     }
-    
+
     function hexToBigEndian(num) {
         // Big-endian hex representation
         return '0x' + (num >>> 0).toString(16).toUpperCase().padStart(8, '0');
     }
-    
+
     function hexToLittleEndian(num) {
         // Little-endian hex - swap byte order
         var bytes = [
@@ -134,43 +134,43 @@
         var swapped = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
         return '0x' + (swapped >>> 0).toString(16).toUpperCase().padStart(8, '0');
     }
-    
+
     function convertIP() {
         var ipInput = document.getElementById('ip_input').value.trim();
         var errorElement = document.getElementById('error_message');
-        
+
         if (!ipInput) {
             clearResults();
             errorElement.textContent = '';
             return;
         }
-        
+
         var validation = validateIPAddress(ipInput);
-        
+
         if (!validation.valid) {
             errorElement.textContent = validation.error;
             document.getElementById('ip_input').style.borderColor = '#dc3545';
             clearResults();
             return;
         }
-        
+
         // Clear error and reset border
         errorElement.textContent = '';
         document.getElementById('ip_input').style.borderColor = '#28a745';
-        
+
         // Convert to different formats
         var integer = ipToInteger(validation.octets);
         var decimalBE = decimalToBigEndian(integer);
         var decimalLE = decimalToLittleEndian(integer);
         var hexBE = hexToBigEndian(integer);
         var hexLE = hexToLittleEndian(integer);
-        
+
         // Calculate binary for each byte
         var byte1 = (integer >>> 24) & 0xFF;
         var byte2 = (integer >>> 16) & 0xFF;
         var byte3 = (integer >>> 8) & 0xFF;
         var byte4 = integer & 0xFF;
-        
+
         // Display results
         document.getElementById('decimal_be_result').value = decimalBE;
         document.getElementById('decimal_le_result').value = decimalLE;
@@ -180,10 +180,10 @@
         document.getElementById('bin2_result').value = byte2.toString(2).padStart(8, '0');
         document.getElementById('bin3_result').value = byte3.toString(2).padStart(8, '0');
         document.getElementById('bin4_result').value = byte4.toString(2).padStart(8, '0');
-        
+
         console.log('Converted IP:', ipInput, '→', integer);
     }
-    
+
     function clearResults() {
         document.getElementById('decimal_be_result').value = '';
         document.getElementById('decimal_le_result').value = '';
@@ -194,16 +194,16 @@
         document.getElementById('bin3_result').value = '';
         document.getElementById('bin4_result').value = '';
     }
-    
+
     function clearIPInput() {
         document.getElementById('ip_input').value = '';
         document.getElementById('ip_input').style.borderColor = '#ccc';
         document.getElementById('error_message').textContent = '';
         clearResults();
     }
-    
+
     // Set example IP on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ip_input').value = '192.168.1.1';
         convertIP();
     });
@@ -212,57 +212,60 @@
 <h1>Convert IP Address to Integer</h1>
 
 <p>
-Convert IPv4 addresses to their unsigned integer representation in decimal,
-hexadecimal, and binary formats.
-Useful for networking calculations, database storage, and programming.
+    Convert IPv4 addresses to their unsigned integer representation in decimal,
+    hexadecimal, and binary formats.
+    Useful for networking calculations, database storage, and programming.
 </p>
 
 <div class="conversion-container">
     <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
         <label for="ip_input" class="input-label">IPv4 Address</label>
         <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
-            <input type="text" id="ip_input" class="ip-input" placeholder="192.168.1.1" 
-                   oninput="convertIP()" />
+            <input type="text" id="ip_input" class="ip-input" placeholder="192.168.1.1" oninput="convertIP()" />
             <button class="btn-clear" onclick="clearIPInput()">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
         <div id="error_message" class="error-message"></div>
     </div>
-    
+
     <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px;">
         <div class="conversion-row">
             <span class="format-label">Dec BE:</span>
             <input type="text" id="decimal_be_result" readonly class="result-display" />
-            <button id="decimal_be_copy" class="btn-copy" onclick="copyInputValueToClipboard('decimal_be_copy', 'decimal_be_result')">
+            <button id="decimal_be_copy" class="btn-copy"
+                onclick="copyInputValueToClipboard('decimal_be_copy', 'decimal_be_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">Dec LE:</span>
             <input type="text" id="decimal_le_result" readonly class="result-display" />
-            <button id="decimal_le_copy" class="btn-copy" onclick="copyInputValueToClipboard('decimal_le_copy', 'decimal_le_result')">
+            <button id="decimal_le_copy" class="btn-copy"
+                onclick="copyInputValueToClipboard('decimal_le_copy', 'decimal_le_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">Hex BE:</span>
             <input type="text" id="hex_be_result" readonly class="result-display" />
-            <button id="hex_be_copy" class="btn-copy" onclick="copyInputValueToClipboard('hex_be_copy', 'hex_be_result')">
+            <button id="hex_be_copy" class="btn-copy"
+                onclick="copyInputValueToClipboard('hex_be_copy', 'hex_be_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">Hex LE:</span>
             <input type="text" id="hex_le_result" readonly class="result-display" />
-            <button id="hex_le_copy" class="btn-copy" onclick="copyInputValueToClipboard('hex_le_copy', 'hex_le_result')">
+            <button id="hex_le_copy" class="btn-copy"
+                onclick="copyInputValueToClipboard('hex_le_copy', 'hex_le_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">BIN1:</span>
             <input type="text" id="bin1_result" readonly class="result-display" style="width: 120px;" />
@@ -270,7 +273,7 @@ Useful for networking calculations, database storage, and programming.
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">BIN2:</span>
             <input type="text" id="bin2_result" readonly class="result-display" style="width: 120px;" />
@@ -278,7 +281,7 @@ Useful for networking calculations, database storage, and programming.
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">BIN3:</span>
             <input type="text" id="bin3_result" readonly class="result-display" style="width: 120px;" />
@@ -286,7 +289,7 @@ Useful for networking calculations, database storage, and programming.
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
-        
+
         <div class="conversion-row">
             <span class="format-label">BIN4:</span>
             <input type="text" id="bin4_result" readonly class="result-display" style="width: 120px;" />
@@ -305,33 +308,40 @@ Useful for networking calculations, database storage, and programming.
 <h2>Why convert IP addresses to integers</h2>
 
 <p>
-Converting IP addresses to integers is a common technique in networking and
-software development where compact storage, fast comparison, or numerical
-processing is required.
+    Converting IP addresses to integers is a common technique in networking and
+    software development where compact storage, fast comparison, or numerical
+    processing is required.
 </p>
 
 <ul>
-  <li>
-    <strong>Database storage</strong> — storing IP addresses as integers reduces
-    space usage and simplifies indexing and range queries.
-  </li>
-  <li>
-    <strong>Sorting and comparison</strong> — integer values allow fast and
-    predictable ordering of IP addresses.
-  </li>
-  <li>
-    <strong>Network calculations</strong> — working with IP ranges, masks, and
-    address blocks is often easier in numeric form.
-  </li>
-  <li>
-    <strong>Low-level programming</strong> — many protocols and APIs represent
-    IP addresses as integers using network byte order.
-  </li>
-  <li>
-    <strong>Debugging and logging</strong> — integer and hexadecimal
-    representations are commonly used in logs and diagnostic tools.
-  </li>
+    <li>
+        <strong>Database storage</strong> — storing IP addresses as integers reduces
+        space usage and simplifies indexing and range queries.
+    </li>
+    <li>
+        <strong>Sorting and comparison</strong> — integer values allow fast and
+        predictable ordering of IP addresses.
+    </li>
+    <li>
+        <strong>Network calculations</strong> — working with IP ranges, masks, and
+        address blocks is often easier in numeric form.
+    </li>
+    <li>
+        <strong>Low-level programming</strong> — many protocols and APIs represent
+        IP addresses as integers using network byte order.
+    </li>
+    <li>
+        <strong>Debugging and logging</strong> — integer and hexadecimal
+        representations are commonly used in logs and diagnostic tools.
+    </li>
 </ul>
+
+<p>
+    In practice, engineers often need to convert IP addresses between human-readable
+    and numeric forms when integrating with low-level systems, databases, or network
+    protocols. Using integer, hexadecimal, or binary representations makes it easier
+    to process, store, and compare IP addresses programmatically.
+</p>
 
 
 {#bottom.html#}
