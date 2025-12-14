@@ -67,8 +67,11 @@
         <button onclick="document.getElementById('prefix').value = '';">X</button>
     </div>
     <button onclick="generateMacAddress()">Generate</button>
-    <input type="text" id="mac_address" readonly
-        style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 250px; height: 40px;" />
+    <div style="display: flex; flex-direction: row; gap: 12px; align-items: center;">
+        <input type="text" id="mac_address" readonly
+            style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 250px; height: 40px;" />
+        <button onclick="copyToClipboard()">Copy</button>
+    </div>
     <div id="error_message" style="color: red; font-weight: bold; min-height: 24px;"></div>
 </div>
 
