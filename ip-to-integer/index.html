@@ -164,15 +164,22 @@
         var decimalLE = decimalToLittleEndian(integer);
         var hexBE = hexToBigEndian(integer);
         var hexLE = hexToLittleEndian(integer);
-        var binary = integerToBinary(integer);
-        var formattedBinary = formatBinary(binary);
+        
+        // Calculate binary for each byte
+        var byte1 = (integer >>> 24) & 0xFF;
+        var byte2 = (integer >>> 16) & 0xFF;
+        var byte3 = (integer >>> 8) & 0xFF;
+        var byte4 = integer & 0xFF;
         
         // Display results
         document.getElementById('decimal_be_result').value = decimalBE;
         document.getElementById('decimal_le_result').value = decimalLE;
         document.getElementById('hex_be_result').value = hexBE;
         document.getElementById('hex_le_result').value = hexLE;
-        document.getElementById('binary_result').value = formattedBinary;
+        document.getElementById('bin1_result').value = byte1.toString(2).padStart(8, '0');
+        document.getElementById('bin2_result').value = byte2.toString(2).padStart(8, '0');
+        document.getElementById('bin3_result').value = byte3.toString(2).padStart(8, '0');
+        document.getElementById('bin4_result').value = byte4.toString(2).padStart(8, '0');
         
         console.log('Converted IP:', ipInput, '→', integer);
     }
@@ -182,7 +189,10 @@
         document.getElementById('decimal_le_result').value = '';
         document.getElementById('hex_be_result').value = '';
         document.getElementById('hex_le_result').value = '';
-        document.getElementById('binary_result').value = '';
+        document.getElementById('bin1_result').value = '';
+        document.getElementById('bin2_result').value = '';
+        document.getElementById('bin3_result').value = '';
+        document.getElementById('bin4_result').value = '';
     }
     
     function clearIPInput() {
@@ -253,9 +263,33 @@
         </div>
         
         <div class="conversion-row">
-            <span class="format-label">BIN:</span>
-            <input type="text" id="binary_result" readonly class="result-display" />
-            <button id="binary_copy" class="btn-copy" onclick="copyInputValueToClipboard('binary_copy', 'binary_result')">
+            <span class="format-label">BIN1:</span>
+            <input type="text" id="bin1_result" readonly class="result-display" style="width: 120px;" />
+            <button id="bin1_copy" class="btn-copy" onclick="copyInputValueToClipboard('bin1_copy', 'bin1_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">BIN2:</span>
+            <input type="text" id="bin2_result" readonly class="result-display" style="width: 120px;" />
+            <button id="bin2_copy" class="btn-copy" onclick="copyInputValueToClipboard('bin2_copy', 'bin2_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">BIN3:</span>
+            <input type="text" id="bin3_result" readonly class="result-display" style="width: 120px;" />
+            <button id="bin3_copy" class="btn-copy" onclick="copyInputValueToClipboard('bin3_copy', 'bin3_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">BIN4:</span>
+            <input type="text" id="bin4_result" readonly class="result-display" style="width: 120px;" />
+            <button id="bin4_copy" class="btn-copy" onclick="copyInputValueToClipboard('bin4_copy', 'bin4_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
