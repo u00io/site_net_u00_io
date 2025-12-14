@@ -83,7 +83,12 @@
             background-color: #E1F5FE;
         }
 
-        h1, h2, h3, h4, h5, h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             color: #01579B;
         }
 
@@ -121,10 +126,56 @@
             text-decoration: none;
             color: #FFFFFF;
         }
+
         #header a:hover {
             color: #EEEEEE;
         }
     </style>
+    <script>
+        // Common SVG icons for reuse
+        const SVG_ICONS = {
+            copy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+            check: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+            clear: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+        };
+
+
+        // Common utility function for copying to clipboard with visual feedback
+        function copyInputValueToClipboard(btnId, inputId) {
+            var inputField = document.getElementById(inputId);
+            var inputValue = inputField.value;
+            var copyButton = document.getElementById(btnId);
+
+            if (inputValue) {
+                navigator.clipboard.writeText(inputValue).then(function () {
+                    // Change icon to green checkmark
+                    copyButton.innerHTML = SVG_ICONS.check;
+                    copyButton.style.backgroundColor = '#4CAF50';
+
+                    // Restore original icon after 3 seconds
+                    setTimeout(function () {
+                        copyButton.innerHTML = SVG_ICONS.copy;
+                        copyButton.style.backgroundColor = '#6c757d';
+                    }, 3000);
+                }, function (err) {
+                    console.error('Failed to copy to clipboard: ', err);
+                    alert('Failed to copy to clipboard');
+                });
+            } else {
+                alert('No content to copy.');
+            }
+        }
+
+        // Common utility function for clearing input fields
+        function clearInput(inputId, errorId) {
+            document.getElementById(inputId).value = '';
+            if (errorId) {
+                document.getElementById(errorId).textContent = '';
+            }
+        }
+
+
+    </script>
 </head>
 
 <body>

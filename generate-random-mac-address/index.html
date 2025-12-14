@@ -3,79 +3,8 @@
 {%title=Generate Random MAC Address%}
 {%description=Generate a random MAC address for network testing and configuration purposes.%}
 
-<h1>Generate Random MAC Address</h1>
-<p>
-    This tool generates a random MAC (Media Access Control) address that can be used for network testing and
-    configuration purposes. A MAC address is a unique identifier assigned to network interfaces for communications on
-    the physical network segment.
-</p>
-
-<h2>Generated MAC Address</h2>
-<script>
-    var error = '';
-    var macAddress = '';
-    function getRandomHexDigit() {
-        return Math.floor(Math.random() * 16).toString(16).toUpperCase();
-    }
-    function parsePrefix() {
-        // Get the prefix from the input field and split it into an array
-        // Check for valid hex-formatted prefix: 2B1C. .. etc
-        var prefixInput = document.getElementById('prefix').value;
-        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
-        console.log('Parsed prefix:', prefix);
-        if (prefix.length % 2 !== 0 || prefix.length > 10) {
-            document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5 bytes).';
-            return null;
-        }
-        return prefix;
-    }
-
-    function generateMacAddress() {
-        var prefix = parsePrefix();
-        if (prefix === null) {
-            return;
-        }
-        macAddress = prefix;
-        // Generate random hex digits to complete the MAC address
-        while (macAddress.length < 12) {
-            macAddress += getRandomHexDigit();
-        }
-        // Format the MAC address as XX:XX:XX:XX:XX:XX
-        var formattedMac = '';
-        for (var i = 0; i < 12; i += 2) {
-            formattedMac += macAddress.substr(i, 2);
-            if (i < 10) {
-                formattedMac += ':';
-            }
-        }
-        document.getElementById('mac_address').value = formattedMac;
-        document.getElementById('error_message').textContent = '';
-    }
-
-    function copyInputValueToClipboard(btnId, inputId) {
-        var macAddressField = document.getElementById(inputId);
-        var macAddress = macAddressField.value;
-        var copyButton = document.getElementById(btnId);
-        
-        if (macAddress) {
-            navigator.clipboard.writeText(macAddress).then(function() {
-                copyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
-                copyButton.style.backgroundColor = '#4CAF50';
-                
-                setTimeout(function() {
-                    copyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-                    copyButton.style.backgroundColor = '#6c757d';
-                }, 3000);
-            }, function(err) {
-                console.error('Failed to copy MAC address: ', err);
-                alert('Failed to copy MAC address');
-            });
-        } else {
-            alert('No MAC address to copy.');
-        }
-    }
-</script>
 <style>
+    /* Common button styles for reuse across pages */
     .btn-copy {
         font-size: 16px;
         width: 40px;
@@ -115,31 +44,101 @@
     .btn-clear:hover {
         background-color: #c82333;
     }
+    
+    /* Common input styles */
+    .input-field {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 24px;
+        width: 250px;
+        height: 40px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 0 8px;
+    }
+    
+    .input-label {
+        font-weight: bold;
+        font-size: 14px;
+    }
 </style>
+
+<script>
+    
+</script>
+
+<h1>Generate Random MAC Address</h1>
+<p>
+    This tool generates a random MAC (Media Access Control) address that can be used for network testing and
+    configuration purposes. A MAC address is a unique identifier assigned to network interfaces for communications on
+    the physical network segment.
+</p>
+
+<h2>Generated MAC Address</h2>
+<script>
+    // Page-specific functions for MAC address generation
+    var error = '';
+    var macAddress = '';
+    
+    function getRandomHexDigit() {
+        return Math.floor(Math.random() * 16).toString(16).toUpperCase();
+    }
+    
+    function parsePrefix() {
+        var prefixInput = document.getElementById('prefix').value;
+        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+        console.log('Parsed prefix:', prefix);
+        if (prefix.length % 2 !== 0 || prefix.length > 10) {
+            document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5 bytes).';
+            return null;
+        }
+        return prefix;
+    }
+
+    function generateMacAddress() {
+        var prefix = parsePrefix();
+        if (prefix === null) {
+            return;
+        }
+        macAddress = prefix;
+        // Generate random hex digits to complete the MAC address
+        while (macAddress.length < 12) {
+            macAddress += getRandomHexDigit();
+        }
+        // Format the MAC address as XX:XX:XX:XX:XX:XX
+        var formattedMac = '';
+        for (var i = 0; i < 12; i += 2) {
+            formattedMac += macAddress.substr(i, 2);
+            if (i < 10) {
+                formattedMac += ':';
+            }
+        }
+        document.getElementById('mac_address').value = formattedMac;
+        document.getElementById('error_message').textContent = '';
+    }
+    
+    // Initialize page when loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set initial SVG icons
+        document.getElementById('copy_button').innerHTML = SVG_ICONS.copy;
+        document.querySelector('.btn-clear').innerHTML = SVG_ICONS.clear;
+    });
+</script>
 
 <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 12px;">
     <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
-        <label for="prefix" style="font-weight: bold; font-size: 14px;">Prefix</label>
+        <label for="prefix" class="input-label">Prefix</label>
         <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
-            <input type="text" id="prefix"
-                style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 250px; height: 40px;" />
-        <button class="btn-clear" onclick="document.getElementById('prefix').value = ''; document.getElementById('error_message').textContent = '';">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-        </button>
+            <input type="text" id="prefix" class="input-field" />
+            <button class="btn-clear" onclick="clearInput('prefix', 'error_message')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
         </div>
     </div>
     <button onclick="generateMacAddress()" class="big">Generate</button>
     <div style="display: flex; flex-direction: row; gap: 12px; align-items: center;">
-        <input type="text" id="mac_address" readonly
-            style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 250px; height: 40px;" />
+        <input type="text" id="mac_address" readonly class="input-field" />
         <button id="copy_button" class="btn-copy" onclick="copyInputValueToClipboard('copy_button', 'mac_address')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
+            <!-- SVG will be inserted by JavaScript -->
         </button>
     </div>
     <div id="error_message" style="color: red; font-weight: bold; min-height: 24px;"></div>
