@@ -1,3 +1,4 @@
+
 import random
 from typing import List
 
@@ -56,12 +57,14 @@ def generate_mac_addresses(
 
     return macs
 
-macs = generate_mac_addresses(
-    prefix="02:AB",
-    locally_administered=True,
-    count=3
-)
 
-for mac in macs:
-    print(mac)
-   
+# Example usage
+if __name__ == "__main__":
+    macs = generate_mac_addresses(
+        prefix="02:AB",
+        locally_administered=True,
+        count=3
+    )
+
+    for mac in macs:
+        print(mac)

@@ -3,6 +3,44 @@
 {%title=Generate MAC Address — u00 Network Tools%}
 {%description=Generate valid MAC addresses for testing, virtualization, and documentation. Control unicast/multicast and locally administered bits.%}
 
+<style>
+    .code-container {
+        position: relative;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e1e5e9;
+    }
+    
+    .code-container pre {
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 0;
+        overflow-x: auto;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .code-container code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        font-family: inherit;
+    }
+    
+    .code-header {
+        background: linear-gradient(90deg, #2d3748 0%, #4a5568 100%);
+        color: white;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        border-bottom: 1px solid #e1e5e9;
+    }
+</style>
+
 <h1>Generate MAC addresses using Python</h1>
 
 <p>
@@ -16,9 +54,11 @@ The first byte is automatically normalized to ensure correct unicast behavior
 and optional local administration.
 </p>
 
-<div style="position: relative;">
-<pre><code class="language-python" id="python_code">
-import random
+<div class="code-container">
+    <div class="code-header">
+        <span>Python Code</span>
+    </div>
+    <pre><code class="language-python" id="python_code">import random
 from typing import List
 
 
@@ -88,9 +128,9 @@ if __name__ == "__main__":
     for mac in macs:
         print(mac)
 </code></pre>
-<button id="copy_python_button" class="btn-copy" onclick="copyPythonCode()" style="position: absolute; top: 8px; right: 8px; z-index: 10;">
-    <!-- SVG will be inserted by JavaScript -->
-</button>
+    <button id="copy_python_button" class="btn-copy" onclick="copyPythonCode()" style="position: absolute; top: 12px; right: 20px; z-index: 10;">
+        <!-- SVG will be inserted by JavaScript -->
+    </button>
 </div>
 
 <script>
