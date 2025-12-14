@@ -12,6 +12,7 @@
 
 <h2>Generated MAC Address</h2>
 <script>
+    var error = '';
     var macAddress = '';
     function getRandomHexDigit() {
         return Math.floor(Math.random() * 16).toString(16).toUpperCase();
@@ -21,8 +22,9 @@
         // Check for valid hex-formatted prefix: 2B1C. .. etc
         var prefixInput = document.getElementById('prefix').value;
         var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+        console.log('Parsed prefix:', prefix);
         if (prefix.length % 2 !== 0 || prefix.length > 10) {
-            alert('Invalid prefix. Please enter a valid hex-formatted prefix (up to 5 bytes).');
+            document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5 bytes).';
             return null;
         }
         return prefix;
@@ -56,6 +58,7 @@
     <input type="text" id="mac_address" readonly
         style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 300px; text-align: center;" />
     <button onclick="generateMacAddress()">Generate</button>
+    <div id="error_message" style="color: red; font-weight: bold;"></div>
 </div>
 
 {#bottom.html#}
