@@ -162,7 +162,6 @@
                 });
             }
         }
-
         // Common utility function for clearing input fields
         function clearInput(inputId, errorId) {
             document.getElementById(inputId).value = '';
@@ -170,7 +169,12 @@
                 document.getElementById(errorId).textContent = '';
             }
         }
-
+        // Initialize page when loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set initial SVG icons
+            document.getElementById('copy_button').innerHTML = SVG_ICONS.copy;
+            document.querySelector('.btn-clear').innerHTML = SVG_ICONS.clear;
+        });
 
     </script>
 </head>
