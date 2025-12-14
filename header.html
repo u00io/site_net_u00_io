@@ -203,11 +203,15 @@
                         copyButton.style.transform = 'scale(1)';
                     }, 100);
 
-                    // Restore original icon after 3 seconds
+                    // Restore original icon after 2 seconds with animation
                     setTimeout(function () {
-                        copyButton.innerHTML = SVG_ICONS.copy;
-                        copyButton.style.backgroundColor = '#6c757d';
-                    }, 3000);
+                        copyButton.style.transform = 'scale(0.95)';
+                        setTimeout(function() {
+                            copyButton.innerHTML = SVG_ICONS.copy;
+                            copyButton.style.backgroundColor = '#6c757d';
+                            copyButton.style.transform = 'scale(1)';
+                        }, 100);
+                    }, 2000);
                 }, function (err) {
                     console.error('Failed to copy to clipboard: ', err);
                     alert('Failed to copy to clipboard');
