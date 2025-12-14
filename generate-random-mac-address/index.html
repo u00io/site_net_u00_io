@@ -107,12 +107,14 @@
     var macAddress = '';
 
     function getRandomHexDigit() {
-        return Math.floor(Math.random() * 16).toString(16).toUpperCase();
+        var digit = Math.floor(Math.random() * 16).toString(16);
+        var isUpperCase = document.getElementById('uppercase_checkbox').checked;
+        return isUpperCase ? digit.toUpperCase() : digit.toLowerCase();
     }
 
     function parsePrefix() {
         var prefixInput = document.getElementById('prefix').value;
-        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '');
         console.log('Parsed prefix:', prefix);
         
         // Allow prefix up to 11 hex digits (5.5 bytes)
@@ -120,7 +122,10 @@
             document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5.5 bytes, 11 hex digits).';
             return null;
         }
-        return prefix;
+        
+        // Apply case formatting to prefix
+        var isUpperCase = document.getElementById('uppercase_checkbox').checked;
+        return isUpperCase ? prefix.toUpperCase() : prefix.toLowerCase();
     }
 
     function generateMacAddress() {
@@ -163,6 +168,12 @@
         var newFirstOctet = firstOctet.toString(16).toUpperCase().padStart(2, '0');
         macAddress = newFirstOctet + macAddress.substr(2);
         
+        // Apply case formatting
+        var isUpperCase = document.getElementById('uppercase_checkbox').checked;
+        if (!isUpperCase) {
+            macAddress = macAddress.toLowerCase();
+        }
+        
         // Format the MAC address as XX:XX:XX:XX:XX:XX
         var formattedMac = '';
         for (var i = 0; i < 12; i += 2) {
@@ -196,6 +207,10 @@
         <div class="checkbox-row">
             <input type="checkbox" id="locally_administered_checkbox" checked onchange="generateMacAddress()" />
             <label for="locally_administered_checkbox" class="input-label">Locally Administered (bit 1)</label>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="uppercase_checkbox" checked onchange="generateMacAddress()" />
+            <label for="uppercase_checkbox" class="input-label">Upper Case</label>
         </div>
     </div>
     <button onclick="generateMacAddress()" class="big">Generate</button>
