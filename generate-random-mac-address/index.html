@@ -124,19 +124,60 @@
         return Math.floor(Math.random() * 16).toString(16).toUpperCase();
     }
 
+    function validatePrefixInput() {
+        var prefixInput = document.getElementById('prefix');
+        var inputValue = prefixInput.value;
+        var errorElement = document.getElementById('error_message');
+        
+        // Check for invalid characters
+        var invalidChars = inputValue.match(/[^A-Fa-f0-9:]/g);
+        if (invalidChars) {
+            errorElement.textContent = 'Invalid characters: only hex digits (0-9, A-F) and colons (:) are allowed.';
+            prefixInput.style.borderColor = '#dc3545';
+            return false;
+        }
+        
+        // Clean the input (remove colons and convert to uppercase)
+        var cleanPrefix = inputValue.replace(/:/g, '').toUpperCase();
+        
+        // Check length
+        if (cleanPrefix.length > 11) {
+            errorElement.textContent = 'Prefix too long. Maximum 11 hex digits (5.5 bytes) allowed.';
+            prefixInput.style.borderColor = '#dc3545';
+            return false;
+        }
+        
+        // Clear error if input is valid
+        errorElement.textContent = '';
+        prefixInput.style.borderColor = '#ccc';
+        return true;
+    }
+    
     function parsePrefix() {
         var prefixInput = document.getElementById('prefix').value;
-        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '');
-        console.log('Parsed prefix:', prefix);
         
-        // Allow prefix up to 11 hex digits (5.5 bytes)
-        if (prefix.length > 11) {
-            document.getElementById('error_message').textContent = 'Invalid prefix. Please enter a valid hex-formatted prefix (up to 5.5 bytes, 11 hex digits).';
+        // Validate input first
+        if (!validatePrefixInput()) {
             return null;
         }
         
-        // Always use upper case
-        return prefix.toUpperCase();
+        // Clean and return the prefix
+        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+        console.log('Parsed prefix:', prefix);
+        
+        return prefix;
+    }
+    
+    function clearPrefixInput() {
+        var inputElement = document.getElementById('prefix');
+        var errorElement = document.getElementById('error_message');
+        
+        inputElement.value = '';
+        inputElement.style.borderColor = '#ccc';
+        errorElement.textContent = '';
+        
+        // Regenerate MAC address after clearing
+        generateMacAddress();
     }
 
     function generateMacAddress() {
@@ -313,8 +354,9 @@
     <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
         <label for="prefix" class="input-label">Prefix</label>
         <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
-            <input type="text" id="prefix" class="input-field" />
-            <button class="btn-clear" onclick="clearInput('prefix', 'error_message')">
+            <input type="text" id="prefix" class="input-field" placeholder="e.g. 02:AB:CD or 02ABCD" 
+                   oninput="validatePrefixInput()" onblur="generateMacAddress()" />
+            <button class="btn-clear" onclick="clearPrefixInput()">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
