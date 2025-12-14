@@ -118,15 +118,18 @@
 </style>
 
 <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 12px;">
-    <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
-        <input type="text" id="prefix"
-            style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 250px; height: 40px;" />
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <label for="prefix" style="font-weight: bold; font-size: 14px;">Prefix</label>
+        <div style="display: flex; flex-direction: row; gap: 0; align-items: center;">
+            <input type="text" id="prefix"
+                style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 250px; height: 40px;" />
         <button class="btn-clear" onclick="document.getElementById('prefix').value = ''; document.getElementById('error_message').textContent = '';">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
         </button>
+        </div>
     </div>
     <button onclick="generateMacAddress()" class="big">Generate</button>
     <div style="display: flex; flex-direction: row; gap: 12px; align-items: center;">
