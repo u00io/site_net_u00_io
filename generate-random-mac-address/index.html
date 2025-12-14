@@ -54,9 +54,16 @@
 
     function copyToClipboard() {
         var macAddressField = document.getElementById('mac_address');
-        macAddressField.select();
-        macAddressField.setSelectionRange(0, 99999); // For mobile devices
-        document.execCommand('copy');
+        var macAddress = macAddressField.value;
+        if (macAddress) {
+            navigator.clipboard.writeText(macAddress).then(function() {
+                alert('MAC address copied to clipboard: ' + macAddress);
+            }, function(err) {
+                alert('Failed to copy MAC address: ', err);
+            });
+        } else {
+            alert('No MAC address to copy.');
+        }
     }
 </script>
 
