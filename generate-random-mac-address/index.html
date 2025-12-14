@@ -54,8 +54,11 @@
 </script>
 
 <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 12px;">
+    <div>
     <input type="text" id="prefix"
         style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 300px; text-align: center;" />
+        <button onclick="document.getElementById('prefix').value = '';">Clear</button>
+    </div>
     <input type="text" id="mac_address" readonly
         style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 300px; text-align: center;" />
     <button onclick="generateMacAddress()">Generate</button>
