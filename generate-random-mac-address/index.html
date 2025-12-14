@@ -60,15 +60,36 @@
         font-weight: bold;
         font-size: 14px;
     }
+    
+    /* Checkbox container styles */
+    .checkbox-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+    
+    .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
 </style>
-
-<script>
-
-</script>
 
 <h1>Generate Random MAC Address</h1>
 <p>
-    This tool generates a random MAC (Media Access Control) address that can be used for network testing and
+    This tool <strong>generates a random MAC (Media Access Control) address</strong> that can be used for network
+    testing and
     configuration purposes. A MAC address is a unique identifier assigned to network interfaces for communications on
     the physical network segment.
 </p>
@@ -100,10 +121,34 @@
             return;
         }
         macAddress = prefix;
+        
         // Generate random hex digits to complete the MAC address
         while (macAddress.length < 12) {
             macAddress += getRandomHexDigit();
         }
+        
+        // Apply multicast and locally administered bits to the first octet
+        var firstOctet = parseInt(macAddress.substr(0, 2), 16);
+        
+        // Bit 0 (LSB) of first octet: 1 = multicast, 0 = unicast
+        var isMulticast = document.getElementById('multicast_checkbox').checked;
+        if (isMulticast) {
+            firstOctet |= 0x01; // Set bit 0
+        } else {
+            firstOctet &= 0xFE; // Clear bit 0
+        }
+        
+        // Bit 1 of first octet: 1 = locally administered, 0 = universally administered
+        var isLocallyAdministered = document.getElementById('locally_administered_checkbox').checked;
+        if (isLocallyAdministered) {
+            firstOctet |= 0x02; // Set bit 1
+        } else {
+            firstOctet &= 0xFD; // Clear bit 1
+        }
+        
+        // Replace first octet in MAC address
+        macAddress = firstOctet.toString(16).toUpperCase().padStart(2, '0') + macAddress.substr(2);
+        
         // Format the MAC address as XX:XX:XX:XX:XX:XX
         var formattedMac = '';
         for (var i = 0; i < 12; i += 2) {
@@ -126,6 +171,17 @@
             <button class="btn-clear" onclick="clearInput('prefix', 'error_message')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
+        </div>
+    </div>
+    
+    <div class="checkbox-container">
+        <div class="checkbox-row">
+            <input type="checkbox" id="multicast_checkbox" onchange="generateMacAddress()" />
+            <label for="multicast_checkbox" class="input-label">Multicast (bit 0)</label>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="locally_administered_checkbox" onchange="generateMacAddress()" />
+            <label for="locally_administered_checkbox" class="input-label">Locally Administered (bit 1)</label>
         </div>
     </div>
     <button onclick="generateMacAddress()" class="big">Generate</button>
