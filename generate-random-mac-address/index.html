@@ -198,6 +198,52 @@ XX:XX:XX:XX:XX:XX
         for temporary or test environments.
     </p>
 
+    <h3>Unicast and multicast MAC addresses</h3>
+
+    <p>
+        MAC addresses can be classified as <strong>unicast</strong> or <strong>multicast</strong>
+        based on the value of the I/G bit (the least significant bit of the first byte).
+    </p>
+
+    <h4>Unicast</h4>
+
+    <p>
+        A <strong>unicast MAC address</strong> identifies a single network interface.
+        Frames sent to a unicast address are delivered to exactly one device.
+    </p>
+
+    <p>
+        For unicast addresses, the I/G bit is set to <code>0</code>.
+    </p>
+
+    <p>
+        Unicast MAC addresses are used in most common networking scenarios,
+        including device configuration, testing, and virtual network interfaces.
+    </p>
+
+    <h4>Multicast</h4>
+
+    <p>
+        A <strong>multicast MAC address</strong> identifies a group of network interfaces.
+        Frames sent to a multicast address may be received by multiple devices
+        that are members of the multicast group.
+    </p>
+
+    <p>
+        For multicast addresses, the I/G bit is set to <code>1</code>.
+    </p>
+
+    <p>
+        Multicast MAC addresses are commonly used for protocols such as
+        ARP, IPv6 Neighbor Discovery, and various discovery and streaming mechanisms.
+    </p>
+
+    <p>
+        Most network testing and virtualization scenarios require
+        <strong>unicast</strong> MAC addresses rather than multicast ones.
+    </p>
+
+
 </div>
 
 {#bottom.html#}
