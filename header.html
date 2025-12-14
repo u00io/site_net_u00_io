@@ -188,8 +188,20 @@
         // Enhanced utility function for copying to clipboard with visual feedback and animation
         function copyInputValueToClipboard(btnId, inputId) {
             var inputField = document.getElementById(inputId);
-            var inputValue = inputField.value;
             var copyButton = document.getElementById(btnId);
+            
+            // Check if elements exist
+            if (!inputField) {
+                console.error('Input field not found:', inputId);
+                return;
+            }
+            
+            if (!copyButton) {
+                console.error('Copy button not found:', btnId);
+                return;
+            }
+            
+            var inputValue = inputField.value;
 
             if (inputValue) {
                 navigator.clipboard.writeText(inputValue).then(function () {
@@ -198,19 +210,23 @@
                     
                     // Change icon to green checkmark with animation
                     setTimeout(function() {
-                        copyButton.innerHTML = SVG_ICONS.check;
-                        copyButton.style.backgroundColor = '#4CAF50';
-                        copyButton.style.transform = 'scale(1)';
+                        if (copyButton && typeof SVG_ICONS !== 'undefined') {
+                            copyButton.innerHTML = SVG_ICONS.check;
+                            copyButton.style.backgroundColor = '#4CAF50';
+                            copyButton.style.transform = 'scale(1)';
+                        }
                     }, 100);
 
                     // Restore original icon after 2 seconds with animation
                     setTimeout(function () {
-                        copyButton.style.transform = 'scale(0.95)';
-                        setTimeout(function() {
-                            copyButton.innerHTML = SVG_ICONS.copy;
-                            copyButton.style.backgroundColor = '#6c757d';
-                            copyButton.style.transform = 'scale(1)';
-                        }, 100);
+                        if (copyButton && typeof SVG_ICONS !== 'undefined') {
+                            copyButton.style.transform = 'scale(0.95)';
+                            setTimeout(function() {
+                                copyButton.innerHTML = SVG_ICONS.copy;
+                                copyButton.style.backgroundColor = '#6c757d';
+                                copyButton.style.transform = 'scale(1)';
+                            }, 100);
+                        }
                     }, 2000);
                 }, function (err) {
                     console.error('Failed to copy to clipboard: ', err);
