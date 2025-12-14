@@ -119,6 +119,7 @@
     var error = '';
     var macAddress = '';
     var generatedAddresses = [];
+    var lastValidPrefix = '';
 
     function getRandomHexDigit() {
         return Math.floor(Math.random() * 16).toString(16).toUpperCase();
@@ -154,10 +155,15 @@
         prefixMessage.style.color = '#666';
         prefixInput.style.borderColor = '#ccc';
         
-        // Automatically generate new MAC address if input is valid
-        setTimeout(function() {
-            generateMacAddress();
-        }, 100);
+        // Check if prefix actually changed
+        var cleanPrefix = inputValue.replace(/:/g, '').toUpperCase();
+        if (cleanPrefix !== lastValidPrefix) {
+            lastValidPrefix = cleanPrefix;
+            // Generate new MAC address only if prefix changed
+            setTimeout(function() {
+                generateMacAddress();
+            }, 100);
+        }
         
         return true;
     }
@@ -189,7 +195,8 @@
         // Also clear the main error message
         document.getElementById('error_message').textContent = '';
         
-        // Regenerate MAC address after clearing
+        // Reset last valid prefix and regenerate
+        lastValidPrefix = '';
         generateMacAddress();
     }
 
