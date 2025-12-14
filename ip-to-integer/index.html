@@ -123,6 +123,28 @@
         return '0x' + bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join('');
     }
     
+    function integerToDecimalBigEndian(num) {
+        // Big-endian decimal - most significant byte first
+        var bytes = [
+            (num >>> 24) & 0xFF,
+            (num >>> 16) & 0xFF,
+            (num >>> 8) & 0xFF,
+            num & 0xFF
+        ];
+        return bytes.join('.');
+    }
+    
+    function integerToDecimalLittleEndian(num) {
+        // Little-endian decimal - least significant byte first  
+        var bytes = [
+            num & 0xFF,
+            (num >>> 8) & 0xFF,
+            (num >>> 16) & 0xFF,
+            (num >>> 24) & 0xFF
+        ];
+        return bytes.join('.');
+    }
+    
     function convertIP() {
         var ipInput = document.getElementById('ip_input').value.trim();
         var errorElement = document.getElementById('error_message');
@@ -153,6 +175,8 @@
         var formattedBinary = formatBinary(binary);
         var bigEndian = integerToBigEndian(integer);
         var littleEndian = integerToLittleEndian(integer);
+        var decimalBigEndian = integerToDecimalBigEndian(integer);
+        var decimalLittleEndian = integerToDecimalLittleEndian(integer);
         
         // Display results
         document.getElementById('decimal_result').value = integer.toString();
@@ -160,6 +184,8 @@
         document.getElementById('binary_result').value = formattedBinary;
         document.getElementById('big_endian_result').value = bigEndian;
         document.getElementById('little_endian_result').value = littleEndian;
+        document.getElementById('decimal_big_endian_result').value = decimalBigEndian;
+        document.getElementById('decimal_little_endian_result').value = decimalLittleEndian;
         
         console.log('Converted IP:', ipInput, '→', integer);
     }
@@ -170,6 +196,8 @@
         document.getElementById('binary_result').value = '';
         document.getElementById('big_endian_result').value = '';
         document.getElementById('little_endian_result').value = '';
+        document.getElementById('decimal_big_endian_result').value = '';
+        document.getElementById('decimal_little_endian_result').value = '';
     }
     
     function clearIPInput() {
@@ -243,6 +271,22 @@
             <span class="format-label">Little-endian:</span>
             <input type="text" id="little_endian_result" readonly class="result-display" />
             <button class="btn-copy" onclick="copyInputValueToClipboard('little_endian_copy', 'little_endian_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Dec Big-endian:</span>
+            <input type="text" id="decimal_big_endian_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_big_endian_copy', 'decimal_big_endian_result')">
+                <!-- SVG will be inserted by JavaScript -->
+            </button>
+        </div>
+        
+        <div class="conversion-row">
+            <span class="format-label">Dec Little-endian:</span>
+            <input type="text" id="decimal_little_endian_result" readonly class="result-display" />
+            <button class="btn-copy" onclick="copyInputValueToClipboard('decimal_little_endian_copy', 'decimal_little_endian_result')">
                 <!-- SVG will be inserted by JavaScript -->
             </button>
         </div>
