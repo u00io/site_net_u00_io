@@ -5,7 +5,57 @@
 
 <h1>Generate Random MAC Address</h1>
 <p>
-    This tool generates a random MAC (Media Access Control) address that can be used for network testing and configuration purposes. A MAC address is a unique identifier assigned to network interfaces for communications on the physical network segment.
+    This tool generates a random MAC (Media Access Control) address that can be used for network testing and
+    configuration purposes. A MAC address is a unique identifier assigned to network interfaces for communications on
+    the physical network segment.
 </p>
+
+<h2>Generated MAC Address</h2>
+<script>
+    var macAddress = '';
+    function getRandomHexDigit() {
+        return Math.floor(Math.random() * 16).toString(16).toUpperCase();
+    }
+    function parsePrefix() {
+        // Get the prefix from the input field and split it into an array
+        // Check for valid hex-formatted prefix: 2B1C. .. etc
+        var prefixInput = document.getElementById('prefix').value;
+        var prefix = prefixInput.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+        if (prefix.length % 2 !== 0 || prefix.length > 10) {
+            alert('Invalid prefix. Please enter a valid hex-formatted prefix (up to 5 bytes).');
+            return null;
+        }
+        return prefix;
+    }
+
+    function generateMacAddress() {
+        var prefix = parsePrefix();
+        if (prefix === null) {
+            return;
+        }
+        macAddress = prefix;
+        // Generate random hex digits to complete the MAC address
+        while (macAddress.length < 12) {
+            macAddress += getRandomHexDigit();
+        }
+        // Format the MAC address as XX:XX:XX:XX:XX:XX
+        var formattedMac = '';
+        for (var i = 0; i < 12; i += 2) {
+            formattedMac += macAddress.substr(i, 2);
+            if (i < 10) {
+                formattedMac += ':';
+            }
+        }
+        document.getElementById('mac_address').value = formattedMac;
+    }
+</script>
+
+<div>
+    <input type="text" id="prefix"
+        style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 300px; text-align: center;" />
+    <input type="text" id="mac_address" readonly
+        style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 24px; width: 300px; text-align: center;" />
+    <button>Generate</button>
+</div>
 
 {#bottom.html#}
