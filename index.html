@@ -1,17 +1,204 @@
 {#header.html#}
 
 {%title=U00 - Open Source Software%}
-{%description=Open Source Software%}
+{%description=Open Source Software - Network tools and utilities for developers and network administrators%}
 
-<h1>U00 - Open Source Software</h1>
-<p>
-    U00 is a collection of open source software projects focused on network tools and utilities.
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        margin: -20px -20px 40px -20px;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .hero-title {
+        font-size: 3.5em;
+        margin: 0 0 16px 0;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(45deg, #ffffff, #e3f2fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.3em;
+        margin: 0 0 32px 0;
+        opacity: 0.9;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+    
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin: 40px 0;
+        padding: 0 20px;
+    }
+    
+    .tool-card {
+        background: white;
+        border-radius: 12px;
+        padding: 32px 24px;
+        text-decoration: none;
+        color: inherit;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 1px solid #e1e5e9;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .tool-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+    
+    .tool-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        border-color: #667eea;
+    }
+    
+    .tool-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 0 16px 0;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .tool-title {
+        font-size: 1.4em;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: #2d3748;
+    }
+    
+    .tool-description {
+        color: #718096;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-size: 2.5em;
+        margin: 60px 0 16px 0;
+        font-weight: 700;
+        color: #2d3748;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+    
+    .section-subtitle {
+        text-align: center;
+        color: #718096;
+        font-size: 1.1em;
+        margin: 0 0 40px 0;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5em;
+        }
+        .hero-section {
+            padding: 40px 15px;
+        }
+        .tools-grid {
+            padding: 0 15px;
+        }
+    }
+</style>
+
+<div class="hero-section">
+    <h1 class="hero-title">
+        <svg width="64" height="64" viewBox="0 0 100 100" style="vertical-align: middle; margin-right: 16px;">
+            <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#e3f2fd;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#logoGradient)" stroke-width="6"/>
+            <text x="50" y="58" text-anchor="middle" fill="url(#logoGradient)" font-family="Arial, sans-serif" font-size="36" font-weight="bold">U</text>
+            <circle cx="75" cy="25" r="8" fill="url(#logoGradient)"/>
+            <circle cx="25" cy="75" r="8" fill="url(#logoGradient)"/>
+        </svg>
+        U00
+    </h1>
+    <p class="hero-subtitle">
+        Professional network tools and utilities for developers, system administrators, and network engineers. 
+        Open source, fast, and reliable.
+    </p>
+</div>
+
+<h2 class="section-title">Network Utilities</h2>
+<p class="section-subtitle">
+    Essential tools for network configuration, testing, and administration
 </p>
 
-<h2>Utilities</h2>
-<div>
-    <div><a href="/generate-mac-address/">Generate MAC Address</a></div>
-    <div><a href="/ip-to-integer/">Convert IP Address to Integer</a></div>
+<div class="tools-grid">
+    <a href="/generate-mac-address/" class="tool-card">
+        <div class="tool-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <circle cx="8" cy="12" r="2"/>
+                <path d="m14 12 2 2 4-4"/>
+            </svg>
+        </div>
+        <h3 class="tool-title">Generate MAC Address</h3>
+        <p class="tool-description">
+            Generate valid MAC addresses for testing, virtualization, and documentation. 
+            Control unicast/multicast and locally administered bits with precision.
+        </p>
+    </a>
+    
+    <a href="/ip-to-integer/" class="tool-card">
+        <div class="tool-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+        </div>
+        <h3 class="tool-title">IP Address to Integer</h3>
+        <p class="tool-description">
+            Convert IPv4 addresses to various integer formats including decimal, hexadecimal, 
+            and binary representations in both big-endian and little-endian byte order.
+        </p>
+    </a>
 </div>
 
 {#bottom.html#}
