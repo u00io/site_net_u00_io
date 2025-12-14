@@ -95,48 +95,56 @@
     </div>
     
     <button onclick="convertNetmask()" class="big">Convert</button>
-</div>
-
-<div class="result-grid" id="results_section" style="display: none;">
-    <div class="result-card">
-        <div class="result-title">CIDR Notation</div>
-        <div class="result-value" id="cidr_result">-</div>
-        <div style="display: flex; flex-direction: row; gap: 0; align-items: center; margin-top: 8px;">
-            <input type="text" id="cidr_output" readonly class="input-field" style="width: 180px;" />
-            <button id="copy_cidr_button" class="btn-copy">
-                <!-- SVG will be inserted by JavaScript -->
-            </button>
+    
+    <!-- Main CIDR Result -->
+    <div id="main_result" style="display: none; text-align: center; margin: 24px 0;">
+        <div style="background: #f8f9fa; border: 2px solid #01579B; border-radius: 12px; padding: 24px; max-width: 400px; margin: 0 auto;">
+            <div style="color: #666; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">CIDR Notation</div>
+            <div id="cidr_result" style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 48px; color: #01579B; font-weight: bold; margin: 8px 0;">-</div>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 0; margin-top: 16px;">
+                <input type="text" id="cidr_output" readonly class="input-field" style="width: 120px; text-align: center; font-size: 20px;" />
+                <button id="copy_cidr_button" class="btn-copy">
+                    <!-- SVG will be inserted by JavaScript -->
+                </button>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="result-card">
-        <div class="result-title">Network Bits</div>
-        <div class="result-value" id="network_bits">-</div>
-        <div class="binary-display" id="netmask_binary">-</div>
-    </div>
+<!-- Additional Network Information -->
+<div id="additional_info" style="display: none; margin: 32px 0;">
+    <h3 style="text-align: center; color: #2d3748; margin-bottom: 24px;">Additional Network Information</h3>
+    
+    <div class="result-grid">
+        <div class="result-card">
+            <div class="result-title">Network Bits</div>
+            <div class="result-value" id="network_bits">-</div>
+            <div class="binary-display" id="netmask_binary">-</div>
+        </div>
 
-    <div class="result-card">
-        <div class="result-title">Host Bits</div>
-        <div class="result-value" id="host_bits">-</div>
-        <div class="binary-display">Available for host addressing</div>
-    </div>
+        <div class="result-card">
+            <div class="result-title">Host Bits</div>
+            <div class="result-value" id="host_bits">-</div>
+            <div class="binary-display">Available for host addressing</div>
+        </div>
 
-    <div class="result-card">
-        <div class="result-title">Total Addresses</div>
-        <div class="result-value" id="total_addresses">-</div>
-        <div class="binary-display">Including network and broadcast</div>
-    </div>
+        <div class="result-card">
+            <div class="result-title">Total Addresses</div>
+            <div class="result-value" id="total_addresses">-</div>
+            <div class="binary-display">Including network and broadcast</div>
+        </div>
 
-    <div class="result-card">
-        <div class="result-title">Usable Host Addresses</div>
-        <div class="result-value" id="usable_hosts">-</div>
-        <div class="binary-display">Excluding network and broadcast</div>
-    </div>
+        <div class="result-card">
+            <div class="result-title">Usable Host Addresses</div>
+            <div class="result-value" id="usable_hosts">-</div>
+            <div class="binary-display">Excluding network and broadcast</div>
+        </div>
 
-    <div class="result-card">
-        <div class="result-title">Wildcard Mask</div>
-        <div class="result-value" id="wildcard_mask">-</div>
-        <div class="binary-display">Inverse of subnet mask</div>
+        <div class="result-card">
+            <div class="result-title">Wildcard Mask</div>
+            <div class="result-value" id="wildcard_mask">-</div>
+            <div class="binary-display">Inverse of subnet mask</div>
+        </div>
     </div>
 </div>
 
@@ -242,7 +250,8 @@
     function convertNetmask() {
         const input = document.getElementById('netmask_input').value.trim();
         const messageEl = document.getElementById('netmask_message');
-        const resultsSection = document.getElementById('results_section');
+        const mainResult = document.getElementById('main_result');
+        const additionalInfo = document.getElementById('additional_info');
         const exampleSection = document.getElementById('example_section');
 
         // Clear previous messages
@@ -250,7 +259,8 @@
         messageEl.style.color = '#dc3545';
 
         if (!input) {
-            resultsSection.style.display = 'none';
+            mainResult.style.display = 'none';
+            additionalInfo.style.display = 'none';
             exampleSection.style.display = 'none';
             return;
         }
@@ -258,13 +268,15 @@
         const validation = validateNetmask(input);
         if (!validation.valid) {
             messageEl.textContent = validation.error;
-            resultsSection.style.display = 'none';
+            mainResult.style.display = 'none';
+            additionalInfo.style.display = 'none';
             exampleSection.style.display = 'none';
             return;
         }
 
         // Show results
-        resultsSection.style.display = 'grid';
+        mainResult.style.display = 'block';
+        additionalInfo.style.display = 'block';
         exampleSection.style.display = 'block';
 
         // Update CIDR result
@@ -301,7 +313,8 @@
     function clearNetmaskInput() {
         document.getElementById('netmask_input').value = '';
         document.getElementById('netmask_message').textContent = '';
-        document.getElementById('results_section').style.display = 'none';
+        document.getElementById('main_result').style.display = 'none';
+        document.getElementById('additional_info').style.display = 'none';
         document.getElementById('example_section').style.display = 'none';
     }
 
