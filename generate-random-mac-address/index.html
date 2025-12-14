@@ -142,4 +142,62 @@
     generateMacAddress();
 </script>
 
+<div>
+
+    <h2>MAC address format</h2>
+
+    <p>
+        A MAC (Media Access Control) address is a <strong>48-bit identifier</strong> used to
+        identify network interfaces at the data link layer (Layer 2).
+        It is commonly written as six hexadecimal bytes:
+    </p>
+
+    <pre>
+XX:XX:XX:XX:XX:XX
+</pre>
+
+    <p>
+        Each pair of hexadecimal digits represents one byte (8 bits).
+    </p>
+
+    <h3>Special bits in the first byte</h3>
+
+    <p>
+        The two least significant bits of the first byte have special meaning:
+    </p>
+
+    <ul>
+        <li>
+            <strong>I/G bit (bit 0)</strong> —
+            <code>0</code> indicates a unicast address,
+            <code>1</code> indicates a multicast address.
+        </li>
+        <li>
+            <strong>U/L bit (bit 1)</strong> —
+            <code>0</code> indicates a globally unique (vendor-assigned) address,
+            <code>1</code> indicates a locally administered address.
+        </li>
+    </ul>
+
+    <h3>Locally administered MAC addresses</h3>
+
+    <p>
+        Locally administered MAC addresses are not assigned to hardware vendors.
+        They are commonly used for:
+    </p>
+
+    <ul>
+        <li>network testing</li>
+        <li>virtual machines and containers</li>
+        <li>emulation and simulation</li>
+        <li>documentation and examples</li>
+    </ul>
+
+    <p>
+        Such addresses avoid conflicts with real network hardware and are safe
+        for temporary or test environments.
+    </p>
+
+</div>
+
 {#bottom.html#}
