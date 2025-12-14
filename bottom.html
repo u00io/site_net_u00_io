@@ -158,128 +158,54 @@ function shareCurrentPage() {
     }
 }
 
-// QR Code generator - pure JavaScript implementation
+// QR Code generator using qrcode.js library
 function generateQRCode(text, size) {
     const canvas = document.getElementById('qr-canvas');
-    const ctx = canvas.getContext('2d');
     
-    // Simple QR code implementation
-    const qr = new QRCodeGenerator();
-    const matrix = qr.generate(text);
-    const cellSize = Math.floor(size / matrix.length);
-    
-    canvas.width = matrix.length * cellSize;
-    canvas.height = matrix.length * cellSize;
-    
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.fillStyle = '#000000';
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-            if (matrix[y][x]) {
-                ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-            }
-        }
+    // Load qrcode.js library if not already loaded
+    if (typeof QRCode === 'undefined') {
+        loadQRCodeLibrary().then(() => {
+            createQRCode(text, canvas, size);
+        });
+    } else {
+        createQRCode(text, canvas, size);
     }
 }
 
-function QRCodeGenerator() {
-    this.generate = function(text) {
-        // Simplified QR code generator
-        const size = 25; // 25x25 matrix for simplicity
-        const matrix = [];
-        
-        // Initialize matrix
-        for (let i = 0; i < size; i++) {
-            matrix[i] = new Array(size).fill(false);
+function loadQRCodeLibrary() {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+function createQRCode(text, canvas, size) {
+    QRCode.toCanvas(canvas, text, {
+        width: size,
+        height: size,
+        margin: 2,
+        color: {
+            dark: '#000000',
+            light: '#FFFFFF'
         }
-        
-        // Add finder patterns with separators
-        this.addFinderPatternWithSeparator(matrix, 0, 0);
-        this.addFinderPatternWithSeparator(matrix, size - 7, 0);
-        this.addFinderPatternWithSeparator(matrix, 0, size - 7);
-        
-        // Add timing patterns
-        for (let i = 8; i < size - 8; i++) {
-            matrix[6][i] = (i % 2 === 0);
-            matrix[i][6] = (i % 2 === 0);
+    }, function(error) {
+        if (error) {
+            console.error('QR Code generation error:', error);
+            // Fallback: show text if QR generation fails
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = '#000000';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('QR generation failed', size/2, size/2);
         }
-        
-        // Add data (simplified hash-based pattern)
-        let hash = this.simpleHash(text);
-        for (let y = 0; y < size; y++) {
-            for (let x = 0; x < size; x++) {
-                if (!this.isReserved(matrix, x, y)) {
-                    matrix[y][x] = ((hash >> ((y * size + x) % 32)) & 1) === 1;
-                }
-            }
-        }
-        
-        return matrix;
-    };
-    
-    this.addFinderPatternWithSeparator = function(matrix, startX, startY) {
-        // 7x7 finder pattern
-        const pattern = [
-            [1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,1],
-            [1,0,1,1,1,0,1],
-            [1,0,1,1,1,0,1],
-            [1,0,1,1,1,0,1],
-            [1,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1]
-        ];
-        
-        // Add finder pattern
-        for (let y = 0; y < 7; y++) {
-            for (let x = 0; x < 7; x++) {
-                if (startY + y >= 0 && startY + y < matrix.length && 
-                    startX + x >= 0 && startX + x < matrix[0].length) {
-                    matrix[startY + y][startX + x] = pattern[y][x] === 1;
-                }
-            }
-        }
-        
-        // Add white separator border around finder pattern
-        for (let y = -1; y <= 7; y++) {
-            for (let x = -1; x <= 7; x++) {
-                if ((y === -1 || y === 7 || x === -1 || x === 7) &&
-                    startY + y >= 0 && startY + y < matrix.length && 
-                    startX + x >= 0 && startX + x < matrix[0].length) {
-                    matrix[startY + y][startX + x] = false;
-                }
-            }
-        }
-    };
-    
-    this.simpleHash = function(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32-bit integer
-        }
-        return Math.abs(hash);
-    };
-    
-    this.isReserved = function(matrix, x, y) {
-        const size = matrix.length;
-        
-        // Finder patterns with separators (8x8 areas)
-        if ((x < 8 && y < 8) || // Top-left
-            (x >= size - 8 && y < 8) || // Top-right  
-            (x < 8 && y >= size - 8)) { // Bottom-left
-            return true;
-        }
-        
-        // Timing patterns (row 6 and column 6)
-        if (x === 6 || y === 6) {
-            return true;
-        }
-        
-        return false;
-    };
+    });
 }
 
 function showQRCode() {
