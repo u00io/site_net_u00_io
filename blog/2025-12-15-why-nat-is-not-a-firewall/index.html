@@ -1,0 +1,99 @@
+{#header.html#}
+
+{%title=Why NAT Is Not a Firewall - Open Source Software%}
+{%description=Network Address Translation (NAT) is often mistaken for a security feature, but it only translates addresses and does not enforce security policies.%}
+
+<h1>Why NAT Is Not a Firewall</h1>
+
+<p>
+Network Address Translation is often described as a security feature. Many
+networks rely on NAT with the assumption that it “blocks incoming traffic” and
+therefore provides protection similar to a firewall.
+</p>
+
+<p>
+This assumption is widespread, convenient — and fundamentally incorrect.
+</p>
+
+<h2>What NAT Actually Does</h2>
+
+<p>
+At its core, NAT rewrites packet headers. It changes source or destination
+addresses (and often ports) so that multiple internal hosts can share a single
+external IP address.
+</p>
+
+<p>
+That is all. No security model is implied. No policy is enforced. NAT does not
+decide which traffic is allowed or forbidden — it only translates addresses.
+</p>
+
+<h2>Why NAT Looks Like Protection</h2>
+
+<p>
+In most consumer setups, NAT is combined with state tracking. Outbound
+connections create temporary translation entries, and only packets matching
+those entries are forwarded back inside.
+</p>
+
+<p>
+From the outside, unsolicited inbound packets are dropped. This behavior feels
+like filtering, even though the decision is based on translation state, not on
+security rules.
+</p>
+
+<h2>State Is Not Policy</h2>
+
+<p>
+A firewall enforces intent. It answers questions like: which hosts may talk to
+which services, under which conditions, and in which direction.
+</p>
+
+<p>
+NAT answers a different question entirely: how should packet addresses be
+rewritten so replies can find their way back.
+</p>
+
+<p>
+The fact that both mechanisms track state does not make them equivalent.
+</p>
+
+<h2>Where the Illusion Breaks</h2>
+
+<p>
+As soon as you add port forwarding, NAT stops looking protective. Incoming
+connections are suddenly allowed — not because the network became less secure,
+but because translation rules were added.
+</p>
+
+<p>
+At this point it becomes clear that NAT was never making a security decision.
+It was merely following mapping rules.
+</p>
+
+<h2>Why This Matters Architecturally</h2>
+
+<p>
+Designing a network under the assumption that NAT provides security leads to
+fragile systems. When the topology changes, or when IPv6 removes the need for
+NAT entirely, the illusion collapses.
+</p>
+
+<p>
+Security should be explicit, inspectable, and intentional. NAT provides none
+of these properties.
+</p>
+
+<h2>The Takeaway</h2>
+
+<p>
+NAT can hide addresses. It can complicate scanning. It can reduce accidental
+exposure.
+</p>
+
+<p>
+But none of these effects make it a firewall.
+</p>
+
+
+{#bottom.html#}

@@ -1,0 +1,111 @@
+{#header.html#}
+
+{%title=Why a /31 Subnet Is Not a Mistake - Open Source Software%}
+{%description=This subnet is a fully standardized and widely used solution for point-to-point IPv4 links, cutting address consumption in half.%}
+
+<h1>Why a /31 Subnet Is Not a Mistake</h1>
+
+<p>
+At first glance, a /31 IPv4 subnet looks wrong. Two addresses, no broadcast,
+no “usable host range” — everything that traditional subnetting rules tell you
+should not exist.
+</p>
+
+<p>
+And yet, /31 is not a hack, not a workaround, and not a violation of the IPv4
+model. It is a fully standardized and widely used solution for a very specific
+type of network link.
+</p>
+
+<h2>Where the Confusion Comes From</h2>
+
+<p>
+The classic IPv4 subnet model assumes that every subnet needs three distinct
+address roles: a network address, a broadcast address, and one or more host
+addresses in between.
+</p>
+
+<p>
+With a /30 subnet, this model fits perfectly: four addresses, two usable hosts,
+one network, one broadcast. This pattern became so ingrained that it was often
+treated as a law of nature rather than a design choice.
+</p>
+
+<p>
+A /31 subnet breaks that mental model. With only two addresses available,
+there is no room for a dedicated network or broadcast address. Both addresses
+must be usable — or the subnet would be pointless.
+</p>
+
+<h2>Point-to-Point Links Change the Rules</h2>
+
+<p>
+On a point-to-point link, there are exactly two devices. No third host will ever
+appear. No broadcast discovery is required. No ambiguity exists about where a
+packet should go.
+</p>
+
+<p>
+In this context, the concept of a broadcast address becomes redundant. Any
+packet sent to “the other side” has only one possible destination.
+</p>
+
+<p>
+Once you accept that broadcast is unnecessary for point-to-point links, the
+need for a larger subnet disappears as well.
+</p>
+
+<h2>The Standardization of /31</h2>
+
+<p>
+This idea was formalized in RFC 3021. The RFC explicitly allows both addresses
+in a /31 subnet to be treated as host addresses, provided the subnet is used
+exclusively for point-to-point links.
+</p>
+
+<p>
+There is no special signaling, no protocol extensions, and no magic behavior.
+The only requirement is that both endpoints agree that the link is point-to-point.
+</p>
+
+<h2>Why This Matters in Practice</h2>
+
+<p>
+Using /31 subnets cuts IPv4 address consumption in half compared to /30 for
+point-to-point links. For large networks with thousands of inter-router links,
+this is not an optimization — it is a necessity.
+</p>
+
+<p>
+This is why /31 is common in ISP backbones, BGP peering links, and internal
+routing infrastructure.
+</p>
+
+<h2>Why Some Equipment Still Fails</h2>
+
+<p>
+Older network stacks and poorly written firmware sometimes assume that the
+first address in a subnet is always “the network” and the last is always
+“broadcast”.
+</p>
+
+<p>
+When such assumptions are hardcoded, /31 subnets appear broken — not because
+they violate the protocol, but because the implementation violates the
+specification.
+</p>
+
+<h2>The Real Lesson</h2>
+
+<p>
+A /31 subnet is a reminder that IP addressing rules are not mathematical
+truths. They are engineering decisions, shaped by assumptions about how a
+network is used.
+</p>
+
+<p>
+When those assumptions change, the rules can — and sometimes must — change
+with them.
+</p>
+
+{#bottom.html#}
