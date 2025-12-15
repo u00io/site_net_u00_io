@@ -4,7 +4,44 @@
 {%description=This subnet is a fully standardized and widely used solution for point-to-point IPv4 links, cutting address consumption in half.%}
 
 <h1>Why a /31 Subnet Is Not a Mistake</h1>
-
+<div style="display: flex; justify-content: center; margin: 32px 0;">
+    <svg width="500" height="200" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Router/Node 1 -->
+        <g id="node1">
+            <rect x="30" y="70" width="100" height="60" rx="8" fill="#01579B" stroke="#003d6b" stroke-width="2"/>
+            <text x="80" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Router A</text>
+            <text x="80" y="115" text-anchor="middle" fill="#E3F2FD" font-family="monospace" font-size="11">10.0.0.0</text>
+            
+            <!-- Interface port -->
+            <rect x="130" y="92" width="15" height="16" fill="#FFC107" stroke="#F57C00" stroke-width="1.5"/>
+            <circle cx="145" cy="100" r="3" fill="#F57C00"/>
+        </g>
+        
+        <!-- Connection line -->
+        <line x1="148" y1="100" x2="352" y2="100" stroke="#01579B" stroke-width="3" stroke-dasharray="5,5"/>
+        <text x="250" y="90" text-anchor="middle" fill="#01579B" font-family="Arial, sans-serif" font-size="13" font-weight="bold">/31 Point-to-Point</text>
+        
+        <!-- Router/Node 2 -->
+        <g id="node2">
+            <rect x="370" y="70" width="100" height="60" rx="8" fill="#01579B" stroke="#003d6b" stroke-width="2"/>
+            <text x="420" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Router B</text>
+            <text x="420" y="115" text-anchor="middle" fill="#E3F2FD" font-family="monospace" font-size="11">10.0.0.1</text>
+            
+            <!-- Interface port -->
+            <rect x="355" y="92" width="15" height="16" fill="#FFC107" stroke="#F57C00" stroke-width="1.5"/>
+            <circle cx="355" cy="100" r="3" fill="#F57C00"/>
+        </g>
+        
+        <!-- Arrows -->
+        <polygon points="350,100 342,96 342,104" fill="#01579B"/>
+        <polygon points="150,100 158,96 158,104" fill="#01579B"/>
+        
+        <!-- Info box -->
+        <rect x="150" y="145" width="200" height="40" rx="4" fill="#E3F2FD" stroke="#01579B" stroke-width="1"/>
+        <text x="250" y="162" text-anchor="middle" fill="#01579B" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Two addresses, both usable</text>
+        <text x="250" y="177" text-anchor="middle" fill="#01579B" font-family="monospace" font-size="10">No network, no broadcast</text>
+    </svg>
+</div>
 <p>
 At first glance, a /31 IPv4 subnet looks wrong. Two addresses, no broadcast,
 no “usable host range” — everything that traditional subnetting rules tell you
