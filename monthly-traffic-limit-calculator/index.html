@@ -1,0 +1,376 @@
+{#header.html#}
+
+{%title=Monthly Traffic Limit Calculator — u00 Network Tools%}
+{%description=Calculate monthly traffic volume from internet speed. Convert Mbps to monthly data usage in GB/TB and find optimal speeds for provider limits.%}
+
+<style>
+    /* Common input styles */
+    .input-field {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 24px;
+        width: 200px;
+        height: 40px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 0 8px;
+        text-align: center;
+    }
+
+    .unit-select {
+        font-size: 18px;
+        height: 40px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 0 8px;
+        background-color: white;
+    }
+
+    .input-label {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+        margin: 24px 0;
+    }
+
+    .result-card {
+        background: #f8f9fa;
+        border: 1px solid #e1e5e9;
+        border-radius: 8px;
+        padding: 16px;
+    }
+
+    .result-title {
+        font-weight: bold;
+        color: #2d3748;
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .result-value {
+        font-family: 'Consolas', 'Courier New', Courier, monospace;
+        font-size: 18px;
+        color: #01579B;
+        margin: 0;
+        word-break: break-all;
+    }
+
+    .info-section {
+        background: #e3f2fd;
+        border-left: 4px solid #01579B;
+        padding: 16px;
+        margin: 24px 0;
+        border-radius: 4px;
+    }
+
+    .provider-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .provider-table th {
+        background: #01579B;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .provider-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e1e5e9;
+    }
+
+    .provider-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    .provider-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-weight: bold;
+        min-height: 24px;
+        margin-top: 8px;
+    }
+</style>
+
+<h1>Monthly Traffic Limit Calculator</h1>
+<p>
+Calculate monthly data traffic volume based on internet connection speed. 
+Find out how much data you'll use per month at a given speed and determine optimal speeds for provider traffic limits.
+</p>
+
+<div style="display: flex; flex-direction: column; gap: 16px; align-items: center; margin: 32px 0;">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <label for="speed_input" class="input-label">Internet Speed</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" id="speed_input" class="input-field" placeholder="100"
+                oninput="calculateTraffic()" min="0" step="0.01" />
+            <select id="speed_unit" class="unit-select" onchange="calculateTraffic()">
+                <option value="kbps">Kbps</option>
+                <option value="mbps" selected>Mbps</option>
+                <option value="gbps">Gbps</option>
+            </select>
+        </div>
+        <div id="error_message" class="error-message"></div>
+    </div>
+</div>
+
+<!-- Main Result -->
+<div id="main_result" style="display: none; text-align: center; margin: 24px 0;">
+    <div style="background: #f8f9fa; border: 2px solid #01579B; border-radius: 12px; padding: 24px; max-width: 500px; margin: 0 auto;">
+        <div style="color: #666; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+            Monthly Traffic Volume
+        </div>
+        <div id="traffic_result" style="font-family: 'Consolas', 'Courier New', Courier, monospace; font-size: 48px; color: #01579B; font-weight: bold; margin: 8px 0;">
+            -
+        </div>
+    </div>
+</div>
+
+<!-- Additional Results -->
+<div id="additional_info" style="display: none; margin: 32px 0;">
+    <h3 style="text-align: center; color: #2d3748; margin-bottom: 24px;">Traffic Breakdown</h3>
+    
+    <div class="result-grid">
+        <div class="result-card">
+            <div class="result-title">Daily Traffic</div>
+            <div class="result-value" id="daily_traffic">-</div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-title">Weekly Traffic</div>
+            <div class="result-value" id="weekly_traffic">-</div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-title">Monthly Traffic (30 days)</div>
+            <div class="result-value" id="monthly_traffic_30">-</div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-title">Monthly Traffic (31 days)</div>
+            <div class="result-value" id="monthly_traffic_31">-</div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-title">Hourly Traffic</div>
+            <div class="result-value" id="hourly_traffic">-</div>
+        </div>
+
+        <div class="result-card">
+            <div class="result-title">Per Minute Traffic</div>
+            <div class="result-value" id="minute_traffic">-</div>
+        </div>
+    </div>
+</div>
+
+<!-- Provider Limits Table Section -->
+<div class="info-section">
+    <h2 style="margin-top: 0;">Standard Provider Traffic Limits</h2>
+    <p>
+        Below are typical monthly traffic limits from various internet service providers and the maximum constant speed 
+        at which you can use the internet without exceeding these limits.
+    </p>
+
+    <table class="provider-table">
+        <thead>
+            <tr>
+                <th>Traffic Limit</th>
+                <th>Maximum Constant Speed</th>
+                <th>Typical Usage Scenario</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>50 GB/month</strong></td>
+                <td id="speed_50gb">-</td>
+                <td>Basic mobile plan</td>
+            </tr>
+            <tr>
+                <td><strong>100 GB/month</strong></td>
+                <td id="speed_100gb">-</td>
+                <td>Light mobile user</td>
+            </tr>
+            <tr>
+                <td><strong>200 GB/month</strong></td>
+                <td id="speed_200gb">-</td>
+                <td>Regular mobile user</td>
+            </tr>
+            <tr>
+                <td><strong>500 GB/month</strong></td>
+                <td id="speed_500gb">-</td>
+                <td>Heavy mobile user / Budget home plan</td>
+            </tr>
+            <tr>
+                <td><strong>1 TB/month</strong></td>
+                <td id="speed_1tb">-</td>
+                <td>Standard home broadband</td>
+            </tr>
+            <tr>
+                <td><strong>2 TB/month</strong></td>
+                <td id="speed_2tb">-</td>
+                <td>Premium home broadband</td>
+            </tr>
+            <tr>
+                <td><strong>5 TB/month</strong></td>
+                <td id="speed_5tb">-</td>
+                <td>Heavy streaming household</td>
+            </tr>
+            <tr>
+                <td><strong>10 TB/month</strong></td>
+                <td id="speed_10tb">-</td>
+                <td>Enterprise / Data center</td>
+            </tr>
+            <tr>
+                <td><strong>20 TB/month</strong></td>
+                <td id="speed_20tb">-</td>
+                <td>Large enterprise / VPS hosting</td>
+            </tr>
+            <tr>
+                <td><strong>50 TB/month</strong></td>
+                <td id="speed_50tb">-</td>
+                <td>Dedicated server / CDN</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 16px; font-size: 14px; color: #666;">
+        <strong>Note:</strong> These calculations assume 24/7 continuous usage at the specified speed. 
+        In practice, actual usage is typically much lower as connections are not constantly saturated. 
+        The "Maximum Constant Speed" represents the theoretical limit for non-stop data transfer over a 30-day period.
+    </p>
+</div>
+
+<script>
+    // Calculate traffic based on speed
+    function calculateTraffic() {
+        var speedInput = parseFloat(document.getElementById('speed_input').value);
+        var speedUnit = document.getElementById('speed_unit').value;
+        var errorElement = document.getElementById('error_message');
+
+        if (!speedInput || speedInput <= 0 || isNaN(speedInput)) {
+            hideResults();
+            errorElement.textContent = '';
+            return;
+        }
+
+        // Convert to bits per second
+        var bitsPerSecond;
+        switch(speedUnit) {
+            case 'kbps':
+                bitsPerSecond = speedInput * 1000;
+                break;
+            case 'mbps':
+                bitsPerSecond = speedInput * 1000000;
+                break;
+            case 'gbps':
+                bitsPerSecond = speedInput * 1000000000;
+                break;
+            default:
+                bitsPerSecond = speedInput * 1000000; // default to Mbps
+        }
+
+        // Calculate bytes per second
+        var bytesPerSecond = bitsPerSecond / 8;
+
+        // Calculate various time periods (in bytes)
+        var bytesPerMinute = bytesPerSecond * 60;
+        var bytesPerHour = bytesPerSecond * 3600;
+        var bytesPerDay = bytesPerSecond * 86400;
+        var bytesPerWeek = bytesPerDay * 7;
+        var bytesPerMonth30 = bytesPerDay * 30;
+        var bytesPerMonth31 = bytesPerDay * 31;
+
+        // Display results
+        document.getElementById('traffic_result').textContent = formatBytes(bytesPerMonth30);
+        document.getElementById('minute_traffic').textContent = formatBytes(bytesPerMinute);
+        document.getElementById('hourly_traffic').textContent = formatBytes(bytesPerHour);
+        document.getElementById('daily_traffic').textContent = formatBytes(bytesPerDay);
+        document.getElementById('weekly_traffic').textContent = formatBytes(bytesPerWeek);
+        document.getElementById('monthly_traffic_30').textContent = formatBytes(bytesPerMonth30);
+        document.getElementById('monthly_traffic_31').textContent = formatBytes(bytesPerMonth31);
+
+        // Calculate speeds for provider limits
+        calculateProviderSpeeds();
+
+        // Show results
+        document.getElementById('main_result').style.display = 'block';
+        document.getElementById('additional_info').style.display = 'block';
+        errorElement.textContent = '';
+    }
+
+    function calculateProviderSpeeds() {
+        var limits = {
+            '50gb': 50 * 1024 * 1024 * 1024,
+            '100gb': 100 * 1024 * 1024 * 1024,
+            '200gb': 200 * 1024 * 1024 * 1024,
+            '500gb': 500 * 1024 * 1024 * 1024,
+            '1tb': 1024 * 1024 * 1024 * 1024,
+            '2tb': 2 * 1024 * 1024 * 1024 * 1024,
+            '5tb': 5 * 1024 * 1024 * 1024 * 1024,
+            '10tb': 10 * 1024 * 1024 * 1024 * 1024,
+            '20tb': 20 * 1024 * 1024 * 1024 * 1024,
+            '50tb': 50 * 1024 * 1024 * 1024 * 1024
+        };
+
+        var secondsPerMonth = 30 * 24 * 60 * 60; // 30 days
+
+        for (var key in limits) {
+            var bytesPerMonth = limits[key];
+            var bytesPerSecond = bytesPerMonth / secondsPerMonth;
+            var bitsPerSecond = bytesPerSecond * 8;
+            var mbps = bitsPerSecond / 1000000;
+            
+            document.getElementById('speed_' + key).textContent = formatSpeed(mbps);
+        }
+    }
+
+    function formatBytes(bytes) {
+        if (bytes < 1024) {
+            return bytes.toFixed(2) + ' B';
+        } else if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(2) + ' KB';
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        } else if (bytes < 1024 * 1024 * 1024 * 1024) {
+            return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+        } else {
+            return (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2) + ' TB';
+        }
+    }
+
+    function formatSpeed(mbps) {
+        if (mbps < 1) {
+            return (mbps * 1000).toFixed(2) + ' Kbps';
+        } else if (mbps < 1000) {
+            return mbps.toFixed(2) + ' Mbps';
+        } else {
+            return (mbps / 1000).toFixed(2) + ' Gbps';
+        }
+    }
+
+    function hideResults() {
+        document.getElementById('main_result').style.display = 'none';
+        document.getElementById('additional_info').style.display = 'none';
+    }
+
+    // Initialize provider speeds on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        calculateProviderSpeeds();
+    });
+</script>
+
+{#bottom.html#}
