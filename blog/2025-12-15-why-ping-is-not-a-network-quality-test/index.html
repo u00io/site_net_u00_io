@@ -1,0 +1,85 @@
+{#header.html#}
+
+{%title=Why Ping Is Not a Network Quality Test - Open Source Software%}
+{%description=Ping measures ICMP round-trip time, not real traffic quality. Learn why low latency and zero loss in ping do not guarantee good network performance.%}
+
+<h1>Why You Can`t Reliably Detect Network Quality with Ping</h1>
+
+<p>
+    Ping is often the first tool used to “check the network”. A few milliseconds of
+    latency and zero packet loss are commonly interpreted as proof that everything
+    is working well.
+</p>
+
+<p>
+    Unfortunately, ping answers a much narrower question than most people think.
+</p>
+
+<h2>What Ping Actually Measures</h2>
+
+<p>
+    Ping sends ICMP Echo Request packets and measures how long it takes to receive
+    the corresponding Echo Replies.
+</p>
+
+<p>
+    This measures the round-trip time of a very specific type of traffic, handled
+    by a very specific code path in the network stack and in intermediate devices.
+</p>
+
+<h2>ICMP Is Not Data Traffic</h2>
+
+<p>
+    ICMP packets are frequently treated differently from TCP or UDP traffic.
+    They may be deprioritized, rate-limited, or even handled by the control plane
+    instead of the fast forwarding path.
+</p>
+
+<p>
+    As a result, ICMP latency can be higher or lower than the latency experienced
+    by actual application traffic.
+</p>
+
+<h2>Queues Matter More Than Distance</h2>
+
+<p>
+    Most real-world latency spikes are caused by queueing, not by propagation
+    delay. Ping packets are small and infrequent, so they often bypass congestion
+    effects that impact bulk data transfers.
+</p>
+
+<p>
+    A network can respond to ping with stable low latency while still delivering
+    poor throughput or high jitter for real workloads.
+</p>
+
+<h2>Packet Loss Is Not Symmetric</h2>
+<p>
+    Ping measures loss of ICMP packets in both directions combined. It does not
+    tell you where the loss occurs, or whether only one direction is affected.
+</p>
+<p>
+    Many applications are sensitive to loss in one direction only, which ping
+    cannot isolate.
+</p>
+
+<h2>When Ping Is Still Useful</h2>
+<p>
+    Ping is excellent for detecting basic reachability and gross failures. If
+    packets do not come back at all, something is clearly broken.
+</p>
+<p>
+    Beyond that, ping is best treated as a liveness probe — not a quality metric.
+</p>
+
+<h2>The Takeaway</h2>
+<p>
+    Ping is easy to use, widely available, and often misleading.
+</p>
+<p>
+    It confirms that a path exists. It does not tell you how well that path serves
+    real traffic.
+</p>
+
+
+{#bottom.html#}
