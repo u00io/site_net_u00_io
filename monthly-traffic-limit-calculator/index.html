@@ -104,6 +104,38 @@
         min-height: 24px;
         margin-top: 8px;
     }
+
+    .quick-speed-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-top: 12px;
+        max-width: 600px;
+    }
+
+    .quick-speed-btn {
+        padding: 8px 16px;
+        background: white;
+        border: 2px solid #01579B;
+        border-radius: 6px;
+        color: #01579B;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .quick-speed-btn:hover {
+        background: #01579B;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(1, 87, 155, 0.3);
+    }
+
+    .quick-speed-btn:active {
+        transform: translateY(0);
+    }
 </style>
 
 <h1>Monthly Traffic Limit Calculator</h1>
@@ -123,6 +155,15 @@ Find out how much data you'll use per month at a given speed and determine optim
                 <option value="mbps" selected>Mbps</option>
                 <option value="gbps">Gbps</option>
             </select>
+        </div>
+        <div class="quick-speed-buttons">
+            <button class="quick-speed-btn" onclick="setSpeed(10, 'mbps')">10 Mbps</button>
+            <button class="quick-speed-btn" onclick="setSpeed(50, 'mbps')">50 Mbps</button>
+            <button class="quick-speed-btn" onclick="setSpeed(100, 'mbps')">100 Mbps</button>
+            <button class="quick-speed-btn" onclick="setSpeed(250, 'mbps')">250 Mbps</button>
+            <button class="quick-speed-btn" onclick="setSpeed(500, 'mbps')">500 Mbps</button>
+            <button class="quick-speed-btn" onclick="setSpeed(1, 'gbps')">1 Gbps</button>
+            <button class="quick-speed-btn" onclick="setSpeed(10, 'gbps')">10 Gbps</button>
         </div>
         <div id="error_message" class="error-message"></div>
     </div>
@@ -265,6 +306,13 @@ Find out how much data you'll use per month at a given speed and determine optim
 </div>
 
 <script>
+    // Set speed from quick buttons
+    function setSpeed(value, unit) {
+        document.getElementById('speed_input').value = value;
+        document.getElementById('speed_unit').value = unit;
+        calculateTraffic();
+    }
+
     // Calculate traffic based on speed
     function calculateTraffic() {
         var speedInput = parseFloat(document.getElementById('speed_input').value);
