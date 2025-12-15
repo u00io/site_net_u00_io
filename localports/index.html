@@ -195,6 +195,78 @@
         line-height: 1.8;
     }
 
+    .screenshot-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 32px 0;
+    }
+
+    .screenshot-item {
+        cursor: pointer;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .screenshot-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .screenshot-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        cursor: pointer;
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: zoom 0.3s;
+    }
+
+    @keyframes zoom {
+        from {transform: translate(-50%, -50%) scale(0.8)}
+        to {transform: translate(-50%, -50%) scale(1)}
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .close-modal:hover,
+    .close-modal:focus {
+        color: #bbb;
+        cursor: pointer;
+    }
+
     @media (max-width: 768px) {
         .hero-title {
             font-size: 2em;
@@ -206,6 +278,9 @@
             display: block;
             margin: 10px auto;
             max-width: 280px;
+        }
+        .modal-content {
+            max-width: 95%;
         }
     }
 </style>
@@ -219,6 +294,23 @@
         <a href="https://github.com/u00io/localports/releases/download/v0.2.2/localports.exe" class="download-button">⬇️ Download v0.2.2</a>
         <a href="https://github.com/u00io/localports" class="source-button">📦 Source Code</a>
     </div>
+</div>
+
+<div class="content-section">
+    <h2 class="section-title">Screenshots</h2>
+    <div class="screenshot-gallery">
+        <div class="screenshot-item" onclick="openModal('screen01.png')">
+            <img src="screen01.png" alt="LocalPorts Screenshot 1">
+        </div>
+        <div class="screenshot-item" onclick="openModal('screen02.png')">
+            <img src="screen02.png" alt="LocalPorts Screenshot 2">
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="modalImage">
 </div>
 
 <div class="content-section">
@@ -341,5 +433,26 @@
         </ul>
     </div>
 </div>
+
+<script>
+function openModal(imageSrc) {
+    var modal = document.getElementById('imageModal');
+    var modalImg = document.getElementById('modalImage');
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;
+}
+
+function closeModal() {
+    var modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+}
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>
 
 {#bottom.html#}
