@@ -288,6 +288,21 @@
 </div>
 
 <div class="content-section">
+    <h2 class="section-title">Screenshots</h2>
+    <p style="color: #4a5568; line-height: 1.6; margin-bottom: 24px;">Visual traceroute with hop-by-hop path and latency analysis</p>
+    <div class="screenshot-gallery">
+        <div class="screenshot-item" onclick="openModal('screen00.png')">
+            <img src="screen00.png" alt="Hopings Screenshot">
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+<div class="content-section">
     <h2 class="section-title">About</h2>
     <div class="info-block">
         <p>Hopings is an open-source visual traceroute tool. It performs ICMP traceroute and presents the result as a clear hop-by-hop path with latency visualization and country flags.</p>
@@ -317,6 +332,27 @@
 
     <div class="info-block">
         <h2>Target Audience</h2>
+<script>
+function openModal(imageSrc) {
+    var modal = document.getElementById('imageModal');
+    var modalImg = document.getElementById('modalImage');
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;
+}
+
+function closeModal() {
+    var modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+}
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+</script>
+
         <div class="audience-tags">
             <span class="audience-tag">Network Engineers</span>
             <span class="audience-tag">System Administrators</span>
