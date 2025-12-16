@@ -1,0 +1,335 @@
+{#header.html#}
+
+{%title=Hopings - Visual Traceroute Tool - Open Source Software%}
+{%description=Hopings is a clean ICMP traceroute tool with visual latency analysis and country-aware routing. See how your packets travel across networks, hop by hop.%}
+
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 40px 20px 30px 20px;
+        background: linear-gradient(135deg, #0277BD 0%, #01579B 50%, #003d6b 100%);
+        color: white;
+        margin: -10px -20px 40px -20px;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .hero-title {
+        font-size: 2.5em;
+        margin: 0 0 12px 0;
+        font-weight: 700;
+        color: #f0f4f8;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.35);
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1em;
+        margin: 0 0 24px 0;
+        opacity: 0.9;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.5;
+    }
+
+    .hero-description {
+        font-size: 1.6em;
+        margin: 0 0 16px 0;
+        font-weight: 600;
+        color: #ffffff;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.4;
+    }
+
+    .hero-features {
+        font-size: 1em;
+        margin: 0 0 30px 0;
+        opacity: 0.85;
+        color: #e3f2fd;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .download-section {
+        margin: 40px 0;
+    }
+
+    .download-info {
+        font-size: 0.85em;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 12px;
+    }
+
+    .download-button {
+        display: inline-block;
+        padding: 14px 36px;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        border-radius: 50px;
+        text-decoration: none;
+        box-shadow: 0 6px 24px rgba(46, 204, 113, 0.4);
+        transition: all 0.3s ease;
+        margin: 0 10px 10px 10px;
+    }
+
+    .download-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 32px rgba(46, 204, 113, 0.6);
+    }
+
+    .source-button {
+        display: inline-block;
+        padding: 14px 36px;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        border-radius: 50px;
+        text-decoration: none;
+        box-shadow: 0 6px 24px rgba(52, 73, 94, 0.4);
+        transition: all 0.3s ease;
+        margin: 0 10px 10px 10px;
+    }
+
+    .source-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 32px rgba(52, 73, 94, 0.6);
+    }
+
+    .content-section {
+        max-width: 900px;
+        margin: 0 auto 60px auto;
+        padding: 0 20px;
+    }
+
+    .section-title {
+        font-size: 2.2em;
+        margin: 0 0 24px 0;
+        font-weight: 700;
+        color: #2d3748;
+        position: relative;
+        padding-bottom: 16px;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #0277BD, #01579B);
+        border-radius: 2px;
+    }
+
+    .info-block {
+        background: white;
+        padding: 32px;
+        border-radius: 12px;
+        margin: 32px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border: 1px solid #e8edf2;
+    }
+
+    .info-block h2 {
+        margin: 0 0 20px 0;
+        color: #2d3748;
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+
+    .info-block ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .info-block li {
+        padding: 12px 0;
+        line-height: 1.7;
+        color: #4a5568;
+        border-bottom: 1px solid #f0f4f8;
+    }
+
+    .info-block li:last-child {
+        border-bottom: none;
+    }
+
+    .info-block p {
+        margin: 0;
+        line-height: 1.7;
+        color: #4a5568;
+    }
+
+    .audience-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .audience-tag {
+        display: inline-block;
+        padding: 8px 16px;
+        background: #f0f4f8;
+        color: #4a5568;
+        border-radius: 6px;
+        font-size: 0.95em;
+    }
+
+    .screenshot-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 32px 0;
+        align-items: start;
+    }
+
+    .screenshot-item {
+        cursor: pointer;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    }
+
+    .screenshot-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .screenshot-item img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.9);
+        cursor: pointer;
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: zoom 0.3s;
+    }
+
+    @keyframes zoom {
+        from {transform: translate(-50%, -50%) scale(0.8)}
+        to {transform: translate(-50%, -50%) scale(1)}
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .close-modal:hover,
+    .close-modal:focus {
+        color: #bbb;
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2em;
+        }
+        .hero-section {
+            padding: 30px 15px 25px 15px;
+        }
+        .download-button, .source-button {
+            display: block;
+            margin: 10px auto;
+            max-width: 280px;
+        }
+        .modal-content {
+            max-width: 95%;
+        }
+    }
+</style>
+
+<div class="hero-section">
+    <h1 class="hero-title">Hopings</h1>
+    <p class="hero-description">
+        Visual Traceroute Tool
+    </p>
+    <p class="hero-features">
+        Clean ICMP traceroute · Visual latency · Country flags · No clutter
+    </p>
+    <div class="download-section">
+        <a href="https://github.com/u00io/hopings/releases/download/v0.2.2/hopings.exe" class="download-button">⬇️ Download v0.2.2</a>
+        <a href="https://github.com/u00io/hopings" target="_blank" class="source-button">📦 Source Code</a>
+        <p class="download-info">(Windows · Portable · ~25 MB)</p>
+    </div>
+</div>
+
+<div class="content-section">
+    <h2 class="section-title">About</h2>
+    <div class="info-block">
+        <p>Hopings is an open-source visual traceroute tool. It performs ICMP traceroute and presents the result as a clear hop-by-hop path with latency visualization and country flags.</p>
+    </div>
+</div>
+
+<div class="content-section">
+    <div class="info-block">
+        <h2>Advantages</h2>
+        <ul>
+            <li><strong>Clear visual path</strong> — Hopings presents traceroute results as a clean, readable hop-by-hop path. Latency, countries, and unreachable hops are immediately visible without digging into raw output.</li>
+            <li><strong>Honest ICMP traceroute</strong> — Uses classic ICMP traceroute without shortcuts or synthetic assumptions. What you see is exactly what the network returns — no hidden logic, no guessing.</li>
+            <li><strong>Latency at a glance</strong> — Round-trip times are visually categorized, making long-distance jumps and slow segments easy to spot instantly.</li>
+            <li><strong>Country-aware routing</strong> — Each hop is enriched with country information and flags, helping you understand geographic routing decisions and cross-border transitions.</li>
+            <li><strong>Readable handling of missing replies</strong> — Filtered or rate-limited hops are shown explicitly, without misleading placeholders or fake timings.</li>
+            <li><strong>Single executable</strong> — Distributed as a single standalone executable. No installers, no runtime dependencies, no configuration files.</li>
+            <li><strong>Fast and lightweight</strong> — Starts instantly and runs without background services, telemetry, or unnecessary overhead.</li>
+            <li><strong>Focused by design</strong> — Hopings does one thing — traceroute — and does it well. No maps, no animations, no clutter.</li>
+            <li><strong>Open source and transparent</strong> — Fully open-source. Easy to inspect, learn from, and extend. Built with correctness and clarity as first principles.</li>
+        </ul>
+    </div>
+
+    <div class="info-block">
+        <h2>System Requirements</h2>
+        <p>Windows 10 and above</p>
+    </div>
+
+    <div class="info-block">
+        <h2>Target Audience</h2>
+        <div class="audience-tags">
+            <span class="audience-tag">Network Engineers</span>
+            <span class="audience-tag">System Administrators</span>
+            <span class="audience-tag">Security Professionals</span>
+            <span class="audience-tag">Technical Professionals</span>
+        </div>
+    </div>
+
+    <div class="info-block">
+        <h2>License</h2>
+        <p>The software is distributed under the MIT License</p>
+        <p style="margin-top: 12px;">Additionally uses: GeoLite2 Country — © MaxMind, Inc.</p>
+    </div>
+</div>
+
+{#bottom.html#}
